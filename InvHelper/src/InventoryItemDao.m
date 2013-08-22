@@ -19,9 +19,6 @@ static InventoryItemDao *instance = nil;
 @property (nonatomic, copy) NSMutableArray *invertoryItemList;
 @property NSUInteger nextId;
 
-- (void)importDataWithArray:(NSArray*) arrayData;
-- (NSArray*)exportDataToArray;
-
 @end
 
 @implementation InventoryItemDao
@@ -30,29 +27,16 @@ static InventoryItemDao *instance = nil;
 
 - (id)init {
     if (self = [super init]) {
-        
-        if (_invertoryItemList.count > 0) {
-            _nextId = [[_invertoryItemList[0] itemId] intValue] + 1;
-        } else {
-            _nextId = 1;
-        }
-        
         return self;
     }
     return nil;
 }
 
-+ (InventoryItemDao *) getInstance {
++ (InventoryItemDao *) instance {
     if (instance) return instance;
     
     instance = [[InventoryItemDao alloc] init];
     return instance;
-}
-
-- (void)setInvertoryItemList:(NSMutableArray *)newList {
-    if (_invertoryItemList != newList) {
-        _invertoryItemList = [newList mutableCopy];
-    }
 }
 
 - (NSUInteger)countOfList {
@@ -77,46 +61,35 @@ static InventoryItemDao *instance = nil;
     }
 }
 
--(void) importDataWithArray:(NSArray*) arrayData {
-    [_invertoryItemList removeAllObjects];
-    
-    NSUInteger maxId = 0;
-    for (NSDictionary *dictData in arrayData) {
-        InventoryItem *item = [InventoryItemHelper createItemWithDict:dictData];
-        if (maxId < [item.itemId intValue]) {
-            maxId = [item.itemId intValue];
-        }
-        [_invertoryItemList addObject:item];
+- (Boolean)exportAllDataToFile:(NSString *) fileName {
+    NSMutableArray *outputArray = [[NSMutableArray alloc] init];
+    for (InventoryItem *item in _invertoryItemList) {
+        [outputArray addObject:[InventoryItemHelper convertItemToDict:item]];
     }
     
-    _nextId = maxId + 1;
-}
-
--(NSArray*) exportDataToArray {
-    /*
-    NSMutableArray *baseTypeArray = [[NSMutableArray alloc] init];
-    for (InventoryItem *inventoryItem in _invertoryItemList) {
-        [baseTypeArray addObject:[inventoryItem toDictionary]];
-    }
-    return baseTypeArray;
-     */
-    return nil;
-}
-
-- (void)writeData {
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self exportDataToArray] options:NSJSONWritingPrettyPrinted error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:outputArray
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    if (jsonData == nil) {
+        NSLog(@"Failed to output json data. %@", error.localizedDescription);
+        return false;
+    }
     
-    NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory
                                                        , NSUserDomainMask
                                                        , YES);
-    NSString *fileName=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"repo.txt"];
-    if ([jsonData writeToFile:fileName atomically:YES]) {
-        NSLog(@"write data to %@", fileName);
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:fileName];
+    if ([jsonData writeToFile:filePath options:NSDataWritingAtomic error:&error]) {
+        NSLog(@"Export all data into %@", filePath);
+        return true;
+    } else {
+        NSLog(@"Failed to write file. %@", error.localizedDescription);
+        return false;
     }
 }
 
-- (void)loadData {
+- (void)loadAllData {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Item" inManagedObjectContext:managedObjectContext];
     [request setEntity:entity];
@@ -132,19 +105,11 @@ static InventoryItemDao *instance = nil;
         _invertoryItemList = [[NSMutableArray alloc] initWithCapacity:10];
     }
     
-    /*
-    NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory
-                                                       , NSUserDomainMask
-                                                       , YES);
-    NSString *fileName=[[paths objectAtIndex:0] stringByAppendingPathComponent:@"repo.txt"];
-    NSData *jsonData = [NSData dataWithContentsOfFile:fileName];
-    if (jsonData) {
-        NSLog(@"read data from %@", fileName);
-        NSError *error;
-        NSArray *arrayData = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error ];
-        [self importDataWithArray:arrayData];
+    if (_invertoryItemList.count > 0) {
+        _nextId = [[_invertoryItemList[0] itemId] intValue] + 1;
+    } else {
+        _nextId = 1;
     }
-     */
 }
 
 - (Boolean)saveContext

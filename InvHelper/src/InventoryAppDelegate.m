@@ -19,8 +19,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    [InventoryItemDao getInstance].managedObjectContext = self.managedObjectContext;
-    [[InventoryItemDao getInstance] loadData];
+    [InventoryItemDao instance].managedObjectContext = self.managedObjectContext;
+    [[InventoryItemDao instance] loadAllData];
     return YES;
 }
 							

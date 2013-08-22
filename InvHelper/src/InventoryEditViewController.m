@@ -196,7 +196,7 @@ const int TAG_LOCATION = 2009;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"ReturnInput"]) {
         if (!_inventoryItem) {
-            _inventoryItem = [[InventoryItemDao getInstance] createInventoryItem];
+            _inventoryItem = [[InventoryItemDao instance] createInventoryItem];
             _inventoryItem.createDate = [NSDate date];
         } else {
             _inventoryItem.updateDate = [NSDate date];
@@ -218,7 +218,7 @@ const int TAG_LOCATION = 2009;
         _inventoryItem.latitude = _latitude;
         _inventoryItem.longitude = _longitude;
         
-        if ([[InventoryItemDao getInstance] saveContext]) {
+        if ([[InventoryItemDao instance] saveContext]) {
             [_photoDao commit];
         } else {
             [_photoDao rollback];

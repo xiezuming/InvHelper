@@ -28,7 +28,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
+    [self.navigationController setToolbarHidden:NO];
     /*UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
      */
@@ -49,7 +49,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[InventoryItemDao getInstance] countOfList];
+    return [[InventoryItemDao instance] countOfList];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -57,7 +57,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     static NSString *CellIdentifier = @"InventoryItemCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    InventoryItem *item = [[InventoryItemDao getInstance] objectInListAtIndex:indexPath.row];
+    InventoryItem *item = [[InventoryItemDao instance] objectInListAtIndex:indexPath.row];
     
     [[cell textLabel] setText:item.title];
     [[cell detailTextLabel] setText:item.desc];
@@ -75,7 +75,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        InventoryItemDao *dao = [InventoryItemDao getInstance];
+        InventoryItemDao *dao = [InventoryItemDao instance];
         [dao removeInventoryItem:[dao objectInListAtIndex:indexPath.row]];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
@@ -103,7 +103,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 {
     if ([[segue identifier] isEqualToString:@"showInventoryItemDetail"]) {
         InventoryDetailViewController *detailViewController = [segue destinationViewController];
-        detailViewController.invertoryItem = [[InventoryItemDao getInstance] objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
+        detailViewController.invertoryItem = [[InventoryItemDao instance] objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
     }
 }
 
@@ -126,5 +126,28 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     if ([[segue identifier] isEqualToString:@"CancelInput"]) {
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+}
+
+- (IBAction)export:(id)sender {
+    static NSDateFormatter *dateFormatter = nil;
+    if (dateFormatter == nil) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HHmmss"];
+    }
+    
+    NSString *message;
+    NSString *fileName = [NSString stringWithFormat:@"%@.txt", [dateFormatter stringFromDate:[NSDate date]]];
+    if ([[InventoryItemDao instance] exportAllDataToFile:fileName]) {
+        message = [NSString stringWithFormat:@"Export the file successfully.\n%@", fileName];
+    } else {
+        message = @"Failed to export the file";
+    }
+    UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                          message:message
+                                                         delegate:nil
+                                                cancelButtonTitle:@"OK"
+                                                otherButtonTitles: nil];
+    [myAlertView show];
+
 }
 @end

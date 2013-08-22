@@ -14,7 +14,7 @@
 
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
-+ (InventoryItemDao *) getInstance;
++ (InventoryItemDao *) instance;
 
 - (NSUInteger)countOfList;
 - (InventoryItem *)objectInListAtIndex:(NSUInteger)theIndex;
@@ -22,8 +22,8 @@
 - (void)removeInventoryItem:(InventoryItem *)item;
 - (Boolean)saveContext;
 
+- (void)loadAllData;
 
-//- (void)writeData;
-- (void)loadData;
+- (Boolean)exportAllDataToFile:(NSString *) fileName;
 
 @end

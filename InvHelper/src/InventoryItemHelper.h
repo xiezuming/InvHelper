@@ -12,6 +12,5 @@
 @interface InventoryItemHelper : NSObject
 
 +(NSDictionary*) convertItemToDict:(InventoryItem *)item;
-+(InventoryItem*) createItemWithDict:(NSDictionary *)dict;
 
 @end

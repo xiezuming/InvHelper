@@ -40,7 +40,7 @@
 		BF8349E517BFBF8300F0A026 /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = BF8349E217BFBF8300F0A026 /* delete.png */; };
 		BF8349E617BFBF8300F0A026 /* sample.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BF8349E317BFBF8300F0A026 /* sample.jpg */; };
 		BF8349EF17BFC28500F0A026 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		BF8349F417BFC4B200F0A026 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF8349F317BFC4B200F0A026 /* Default-568h@2x.png */; };
+		BF93827B17C6594C00235328 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF93827A17C6594C00235328 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,7 +109,7 @@
 		BF8349E117BFBF8300F0A026 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = add.png; path = resource/add.png; sourceTree = "<group>"; };
 		BF8349E217BFBF8300F0A026 /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete.png; path = resource/delete.png; sourceTree = "<group>"; };
 		BF8349E317BFBF8300F0A026 /* sample.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = sample.jpg; path = resource/sample.jpg; sourceTree = "<group>"; };
-		BF8349F317BFC4B200F0A026 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		BF93827A17C6594C00235328 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "resource/Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,8 +266,8 @@
 		BF83499F17BFBD8700F0A026 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BF93827A17C6594C00235328 /* Default-568h@2x.png */,
 				BF8349E117BFBF8300F0A026 /* add.png */,
-				BF8349F317BFC4B200F0A026 /* Default-568h@2x.png */,
 				BF8349E217BFBF8300F0A026 /* delete.png */,
 				BF8349E317BFBF8300F0A026 /* sample.jpg */,
 				BF8349CF17BFBEFD00F0A026 /* main.m */,
@@ -335,11 +335,11 @@
 				BF8349E417BFBF8300F0A026 /* add.png in Resources */,
 				BF8349E517BFBF8300F0A026 /* delete.png in Resources */,
 				BF8349E617BFBF8300F0A026 /* sample.jpg in Resources */,
-				BF8349F417BFC4B200F0A026 /* Default-568h@2x.png in Resources */,
 				BF5EC64717BFF66F001811DF /* zbar-back.png in Resources */,
 				BF5EC64817BFF66F001811DF /* zbar-help.html in Resources */,
 				BF5EC64917BFF66F001811DF /* zbar-helpicons.png in Resources */,
 				BF5EC64A17BFF66F001811DF /* zbar-samples.png in Resources */,
+				BF93827B17C6594C00235328 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
