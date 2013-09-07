@@ -11,7 +11,7 @@
 
 @implementation InventoryItemHelper
 
-+(NSDictionary*) convertItemToDict:(InventoryItem *)item {
++(NSDictionary*) convertItemToDict:(InventoryItem *)item KeepType:(BOOL)keepType {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:20];
     NSEntityDescription *entity = [item entity];
     NSDictionary *attributes = [entity attributesByName];
@@ -19,7 +19,11 @@
     for (NSString *attributeName in attributes) {
         id value = [item valueForKey:attributeName];
         if (value) {
-            [dict setObject:[value description] forKey:attributeName];
+            if (keepType) {
+                [dict setObject:value forKey:attributeName];
+            } else {
+                [dict setObject:[value description] forKey:attributeName];
+            }
         }
     }
     return dict;

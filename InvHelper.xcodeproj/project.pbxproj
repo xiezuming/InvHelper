@@ -41,6 +41,8 @@
 		BF8349E617BFBF8300F0A026 /* sample.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BF8349E317BFBF8300F0A026 /* sample.jpg */; };
 		BF8349EF17BFC28500F0A026 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		BF93827B17C6594C00235328 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF93827A17C6594C00235328 /* Default-568h@2x.png */; };
+		BFC98FB017DA38A600F7DAD4 /* InventorySettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC98FAF17DA38A600F7DAD4 /* InventorySettingViewController.m */; };
+		BFC98FB317DA490400F7DAD4 /* HttpInvoker.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC98FB217DA490400F7DAD4 /* HttpInvoker.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,6 +112,10 @@
 		BF8349E217BFBF8300F0A026 /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete.png; path = resource/delete.png; sourceTree = "<group>"; };
 		BF8349E317BFBF8300F0A026 /* sample.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = sample.jpg; path = resource/sample.jpg; sourceTree = "<group>"; };
 		BF93827A17C6594C00235328 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "resource/Default-568h@2x.png"; sourceTree = "<group>"; };
+		BFC98FAE17DA38A600F7DAD4 /* InventorySettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InventorySettingViewController.h; path = src/InventorySettingViewController.h; sourceTree = "<group>"; };
+		BFC98FAF17DA38A600F7DAD4 /* InventorySettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InventorySettingViewController.m; path = src/InventorySettingViewController.m; sourceTree = "<group>"; };
+		BFC98FB117DA490400F7DAD4 /* HttpInvoker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HttpInvoker.h; path = src/HttpInvoker.h; sourceTree = "<group>"; };
+		BFC98FB217DA490400F7DAD4 /* HttpInvoker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HttpInvoker.m; path = src/HttpInvoker.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +258,8 @@
 				BF8349CE17BFBEFD00F0A026 /* InventoryMasterViewController.m */,
 				BF8349B317BFBD8700F0A026 /* InvHelper.xcdatamodeld */,
 				BF8349B017BFBD8700F0A026 /* MainStoryboard.storyboard */,
+				BFC98FAE17DA38A600F7DAD4 /* InventorySettingViewController.h */,
+				BFC98FAF17DA38A600F7DAD4 /* InventorySettingViewController.m */,
 				BF8349D017BFBEFD00F0A026 /* MoveScaleImageView.h */,
 				BF8349D117BFBEFD00F0A026 /* MoveScaleImageView.m */,
 				BF8349D217BFBEFD00F0A026 /* PhotoDao.h */,
@@ -259,6 +267,8 @@
 				BF8349D417BFBEFD00F0A026 /* PhotoViewController.h */,
 				BF8349D517BFBEFD00F0A026 /* PhotoViewController.m */,
 				BF83499F17BFBD8700F0A026 /* Supporting Files */,
+				BFC98FB117DA490400F7DAD4 /* HttpInvoker.h */,
+				BFC98FB217DA490400F7DAD4 /* HttpInvoker.m */,
 			);
 			path = InvHelper;
 			sourceTree = "<group>";
@@ -363,6 +373,8 @@
 				BF8349E017BFBEFD00F0A026 /* PhotoViewController.m in Sources */,
 				BF8349EF17BFC28500F0A026 /* (null) in Sources */,
 				BF5EC62517BFD2EB001811DF /* InventoryItem.m in Sources */,
+				BFC98FB017DA38A600F7DAD4 /* InventorySettingViewController.m in Sources */,
+				BFC98FB317DA490400F7DAD4 /* HttpInvoker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,8 @@
 #import "InventoryDetailViewController.h"
 #import "InventoryItem.h"
 #import "InventoryItemDao.h"
+#import "InventoryItemHelper.h"
+#import "HttpInvoker.h"
 #import "PhotoDao.h"
 
 static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
@@ -142,12 +144,74 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     } else {
         message = @"Failed to export the file";
     }
-    UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+    UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Message"
                                                           message:message
                                                          delegate:nil
                                                 cancelButtonTitle:@"OK"
                                                 otherButtonTitles: nil];
     [myAlertView show];
 
+}
+
+- (IBAction)upload:(id)sender {
+    NSString *userName;
+    NSString *password;
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [ud objectForKey:@"settings"];
+    if (settings) {
+        userName = [settings objectForKey:@"userName"];
+        password = [settings objectForKey:@"password"];
+    }
+    if (!settings || [userName length] == 0 || [password length] == 0) {
+        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                              message:@"Input settings first"
+                                                             delegate:nil
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles: nil];
+        [myAlertView show];
+        return;
+    }
+    
+    NSMutableDictionary *params;
+    HttpInvokerResult *result;
+    
+    result = [HttpInvoker call:@"get_user" WithParams:[[NSDictionary alloc] initWithObjectsAndKeys:userName, @"userName", password, @"password",nil]];
+    if (![result isOK]) {
+        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                              message:[result message]
+                                                             delegate:nil
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles: nil];
+        [myAlertView show];
+        return;
+    }
+    
+    NSNumber *userId = [[result data] objectForKey:@"userId"];
+    
+    InventoryItemDao *itemDao = [InventoryItemDao instance];
+    NSUInteger itemCount = [itemDao countOfList];
+    for (int i = 0; i < itemCount; i++) {
+        InventoryItem *item = [itemDao objectInListAtIndex:i];
+        params = [[NSMutableDictionary alloc] initWithDictionary:[InventoryItemHelper convertItemToDict:item KeepType:true]];
+        [params setObject:userId forKey:@"userId"];
+        result = [HttpInvoker call:@"add_item" WithParams:params];
+        if (![result isOK]) {
+            UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                  message:[NSString stringWithFormat:@"Failed to upload item[%d]: %@", i+1, [result message]]
+                                                                 delegate:nil
+                                                        cancelButtonTitle:@"OK"
+                                                        otherButtonTitles: nil];
+            [myAlertView show];
+            return;
+        }
+    }
+
+    UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Message"
+                                                          message:[NSString stringWithFormat:@"Upload all items[%d] successfully.", itemCount]
+                                                         delegate:nil
+                                                cancelButtonTitle:@"OK"
+                                                otherButtonTitles: nil];
+    [myAlertView show];
 }
 @end

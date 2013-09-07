@@ -64,7 +64,7 @@ static InventoryItemDao *instance = nil;
 - (Boolean)exportAllDataToFile:(NSString *) fileName {
     NSMutableArray *outputArray = [[NSMutableArray alloc] init];
     for (InventoryItem *item in _invertoryItemList) {
-        [outputArray addObject:[InventoryItemHelper convertItemToDict:item]];
+        [outputArray addObject:[InventoryItemHelper convertItemToDict:item KeepType:false]];
     }
     
     NSError *error;

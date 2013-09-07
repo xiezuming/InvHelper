@@ -11,6 +11,6 @@
 
 @interface InventoryItemHelper : NSObject
 
-+(NSDictionary*) convertItemToDict:(InventoryItem *)item;
++(NSDictionary*) convertItemToDict:(InventoryItem *)item KeepType:(BOOL)keepType;
 
 @end

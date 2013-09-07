@@ -46,6 +46,7 @@ const int TAG_SIZE = 2006;
 const int TAG_WEIGHT = 2007;
 const int TAG_DESCRIPTION = 2008;
 const int TAG_LOCATION = 2009;
+const int TAG_BARCODE = 2010;
 
 @implementation InventoryEditViewController
 
@@ -86,6 +87,7 @@ const int TAG_LOCATION = 2009;
     [_photoDao beginTransaction];
     
     [self prepareTextFiled:_titleTextField withTag:TAG_TITLE isPickerView:FALSE];
+    [self prepareTextFiled:_barCodeTextField withTag:TAG_BARCODE isPickerView:FALSE];
     [self prepareTextFiled:_quantityTextField withTag:TAG_QUANTITY isPickerView:FALSE];
     [self prepareTextFiled:_categoryTextField withTag:TAG_CATEGORY isPickerView:TRUE];
     [self prepareTextFiled:_conditionTextField withTag:TAG_CONDITION isPickerView:TRUE];
@@ -110,7 +112,7 @@ const int TAG_LOCATION = 2009;
     _isUpdate = _inventoryItem != NULL;
     if (_isUpdate) {
         _titleTextField.text = _inventoryItem.title;
-        _barCodeLabel.text = _inventoryItem.barcode;
+        _barCodeTextField.text = _inventoryItem.barcode;
         _quantityTextField.text = _inventoryItem.quantity.description;
         _categoryTextField.text = _inventoryItem.category;
         _conditionTextField.text = _inventoryItem.condition;
@@ -123,6 +125,8 @@ const int TAG_LOCATION = 2009;
         if (_inventoryItem.photoname1) [_photoNames addObject:_inventoryItem.photoname1];
         if (_inventoryItem.photoname2) [_photoNames addObject:_inventoryItem.photoname2];
         if (_inventoryItem.photoname3) [_photoNames addObject:_inventoryItem.photoname3];
+    } else {
+        [self loadInputDefault];
     }
     
     [self refreshPhotos];
@@ -203,20 +207,21 @@ const int TAG_LOCATION = 2009;
         }
 
         _inventoryItem.title = _titleTextField.text;
-        _inventoryItem.barcode = _barCodeLabel.text;
+        _inventoryItem.barcode = _barCodeTextField.text;
         _inventoryItem.photoname1 = _photoNames.count<1 ? nil : [_photoNames objectAtIndex:0];
         _inventoryItem.photoname2 = _photoNames.count<2 ? nil : [_photoNames objectAtIndex:1];
         _inventoryItem.photoname3 = _photoNames.count<3 ? nil : [_photoNames objectAtIndex:2];
         _inventoryItem.quantity =  [NSNumber numberWithInt:[_quantityTextField.text intValue]];
         _inventoryItem.category = _categoryTextField.text;
         _inventoryItem.condition = _conditionTextField.text;
-        if (!_priceTextField.text)
-            _inventoryItem.price = [NSNumber numberWithFloat:[_priceTextField.text floatValue]];
+        _inventoryItem.price = [NSNumber numberWithFloat:[_priceTextField.text floatValue]];
         _inventoryItem.size = _sizeTextField.text;
         _inventoryItem.weight = _weightTextField.text;
         _inventoryItem.desc = _descriptionTextView.text;
         _inventoryItem.latitude = _latitude;
         _inventoryItem.longitude = _longitude;
+        
+        [self saveInputDefault];
         
         if ([[InventoryItemDao instance] saveContext]) {
             [_photoDao commit];
@@ -227,6 +232,36 @@ const int TAG_LOCATION = 2009;
         [_photoDao rollback];
     }
 }
+
+// **************** Input Default Begin ****************/
+- (void)saveInputDefault {
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *inputDefaultDict = [[NSMutableDictionary alloc] initWithCapacity:2];
+    if (_conditionTextField.text) {
+        [inputDefaultDict setObject:_conditionTextField.text forKey:@"condition"];
+    }
+    if (_categoryTextField.text) {
+        [inputDefaultDict setObject:_categoryTextField.text forKey:@"category"];
+    }
+    [ud setObject:inputDefaultDict forKey:@"inputDefault"];
+    [ud synchronize];
+}
+- (void)loadInputDefault {
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *inputDefaultDict = [ud objectForKey:@"inputDefault"];
+    if (inputDefaultDict) {
+        NSString *condition = [inputDefaultDict objectForKey:@"condition"];
+        if (condition) {
+            _conditionTextField.text = condition;
+        }
+        
+        NSString *category = [inputDefaultDict objectForKey:@"category"];
+        if (category) {
+            _categoryTextField.text = category;
+        }
+    }
+}
+// **************** Input Default End ****************/
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -298,7 +333,7 @@ const int TAG_LOCATION = 2009;
         ZBarSymbol *symbol = nil;
         for(symbol in results)
             break;
-        _barCodeLabel.text = symbol.data;
+        _barCodeTextField.text = symbol.data;
         //resultImage.image = [info objectForKey: UIImagePickerControllerOriginalImage];
     } else {
         UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
