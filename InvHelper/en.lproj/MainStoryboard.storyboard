@@ -681,7 +681,7 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zQt-H4-SEw">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zQt-H4-SEw">
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="125" id="Y2F-4y-yW1"/>
                                                     </constraints>
@@ -1236,88 +1236,6 @@
     <resources>
         <image name="delete.png" width="16" height="16"/>
     </resources>
-    <classes>
-        <class className="InventoryDetailViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InventoryDetailViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="barCodeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="categoryLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="conditionLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="descriptionLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="locationLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="photo1ImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="photo2ImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="photo3ImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="priceLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="quantityLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="sizeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="weightLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="InventoryEditViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InventoryEditViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="inputAccessoryViewDidFinish:"/>
-                <relationship kind="action" name="photoImageViewClick:"/>
-                <relationship kind="action" name="scanBarCode:"/>
-                <relationship kind="action" name="touchPhotoDelete:"/>
-                <relationship kind="action" name="updateLocation:"/>
-                <relationship kind="outlet" name="barCodeTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="categoryTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="conditionTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="descriptionTextView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="locationLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="photo0DeleteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="photo0ImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="photo1DeleteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="photo1ImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="photo2DeleteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="photo2ImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="pickerToolbar" candidateClass="UIToolbar"/>
-                <relationship kind="outlet" name="priceTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="quantityTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="sizeTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="titleTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="updateLocationButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="weightTextField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="InventoryMasterViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InventoryMasterViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancel:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="action" name="done:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="action" name="export:"/>
-                <relationship kind="action" name="upload:"/>
-            </relationships>
-        </class>
-        <class className="InventorySettingViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InventorySettingViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="inputAccessoryViewDidFinish:"/>
-                <relationship kind="outlet" name="inputToolbar" candidateClass="UIToolbar"/>
-                <relationship kind="outlet" name="passwordTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="serverTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="userNameTextField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="MoveScaleImageView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MoveScaleImageView.h"/>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="PhotoViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PhotoViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="photoImageView" candidateClass="MoveScaleImageView"/>
-            </relationships>
-        </class>
-        <class className="UIStoryboardSegue" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIStoryboardSegue.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

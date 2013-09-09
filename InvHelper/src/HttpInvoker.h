@@ -22,6 +22,7 @@
 @interface HttpInvoker : NSObject
 
 +(HttpInvokerResult *) call:(NSString *)methodName WithParams:(NSDictionary *) params;
++(HttpInvokerResult *) uploadFile:(NSString *)filePath WithParams:(NSDictionary *) params;
 
 @end
 

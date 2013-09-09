@@ -77,29 +77,20 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        InventoryItemDao *dao = [InventoryItemDao instance];
-        [dao removeInventoryItem:[dao objectInListAtIndex:indexPath.row]];
+        InventoryItem * item = [[InventoryItemDao instance] objectInListAtIndex:indexPath.row];
+        // delete photos
+        PhotoDao *photoDao = [PhotoDao instance];
+        [photoDao beginTransaction];
+        if ([item photoname1]) [photoDao deletePhotoWithPhotoName:[item photoname1]];
+        if ([item photoname2]) [photoDao deletePhotoWithPhotoName:[item photoname2]];
+        if ([item photoname3]) [photoDao deletePhotoWithPhotoName:[item photoname3]];
+        [photoDao commit];
+        // delete item record from DB
+        [[InventoryItemDao instance] removeInventoryItem:item];
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
 }
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -197,18 +188,43 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
         [params setObject:userId forKey:@"userId"];
         result = [HttpInvoker call:@"add_item" WithParams:params];
         if (![result isOK]) {
-            UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                  message:[NSString stringWithFormat:@"Failed to upload item[%d]: %@", i+1, [result message]]
-                                                                 delegate:nil
-                                                        cancelButtonTitle:@"OK"
-                                                        otherButtonTitles: nil];
-            [myAlertView show];
+            [[[UIAlertView alloc] initWithTitle:@"Error"
+                                        message:[NSString stringWithFormat:@"Failed to upload item[%d]: %@", i+1, [result message]]
+                                       delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles: nil] show];
             return;
         }
+        
+        NSMutableArray *photoPaths = [[NSMutableArray alloc] init];
+        if ([item photoname1])
+            [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname1]]];
+        if ([item photoname2])
+            [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname2]]];
+        if ([item photoname3])
+            [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname3]]];
+        
+        params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:userId, @"userId", nil];
+        for (NSString *photoPath in photoPaths) {
+            result = [HttpInvoker uploadFile:photoPath WithParams:params];
+            if (![result isOK]) {
+                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                      message:[NSString stringWithFormat:@"Failed to upload the photo file of item[%d]: %@", i+1, [result message]]
+                                                                     delegate:nil
+                                                            cancelButtonTitle:@"OK"
+                                                            otherButtonTitles: nil];
+                [myAlertView show];
+                return;
+            }
+        }
+        
     }
 
+    
+    
+    
     UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Message"
-                                                          message:[NSString stringWithFormat:@"Upload all items[%d] successfully.", itemCount]
+                                                          message:[NSString stringWithFormat:@"Upload all items successfully.\nItems: %d", itemCount]
                                                          delegate:nil
                                                 cancelButtonTitle:@"OK"
                                                 otherButtonTitles: nil];

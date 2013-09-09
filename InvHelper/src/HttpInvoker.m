@@ -37,19 +37,12 @@
 @implementation HttpInvoker
 
 +(HttpInvokerResult *) call:(NSString *)methodName WithParams:(NSDictionary *) params {
-    NSString *server;
-    
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *settings = [ud objectForKey:@"settings"];
-    if (settings) {
-        server = [settings objectForKey:@"server"];
-    }
-    if (!settings || [server length] == 0) {
+    NSString *baseUrlString = [HttpInvoker getBaseUrlString];
+    if (!baseUrlString) {
         return [HttpInvokerResult createFialedResultWithMessage:@"Input the server address in Settings first"];
     }
     
-    NSURL *url = [NSURL URLWithString:
-                  [NSString stringWithFormat:@"http://%@/inv/index.php/inv/%@", server, methodName]];
+    NSURL *url = [NSURL URLWithString:[baseUrlString stringByAppendingString:methodName]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:5.0];
@@ -75,6 +68,21 @@
     }
 }
 
++(NSString *) getBaseUrlString {
+    NSString *server;
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [ud objectForKey:@"settings"];
+    if (settings) {
+        server = [settings objectForKey:@"server"];
+    }
+    if (!settings || [server length] == 0) {
+        return nil;
+    }
+    
+    return [NSString stringWithFormat:@"http://%@/inv/index.php/inv/", server];
+}
+
 +(NSData *) convertToHttpBodyWithParams:(NSDictionary *) params {
     NSString *body = @"";
     for (NSString *key in params) {
@@ -93,6 +101,72 @@
     };
     NSLog(@"body = %@", body);
     return [body dataUsingEncoding:NSUTF8StringEncoding];
+}
+
++(HttpInvokerResult *) uploadFile:(NSString *)filePath WithParams:(NSDictionary *) params {
+    NSString *baseUrlString = [HttpInvoker getBaseUrlString];
+    if (!baseUrlString) {
+        return [HttpInvokerResult createFialedResultWithMessage:@"Input the server address in Settings first"];
+    }
+    
+    NSURL *url = [NSURL URLWithString:[baseUrlString stringByAppendingString:@"upload"]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod: @"POST"];
+    
+    // set Content-Type in HTTP header
+    NSString *boundary = @"---------------------------14737809831466499882746641449";
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    // add params (all params are strings)
+    for (NSString *param in params) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    NSData *imageData = [NSData dataWithContentsOfFile:filePath];
+    NSString* fileName = [filePath lastPathComponent];
+    if (imageData) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"userfile\"; filename=\"%@\"\r\n", fileName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    NSError *error;
+    NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+    if (!received) {
+        return [HttpInvokerResult createFialedResultWithMessage:[error localizedDescription]];
+    }
+    NSLog(@"resutl=%@",[[NSString alloc]initWithData:received encoding:NSUTF8StringEncoding]);
+    
+    NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:received options:kNilOptions error:&error];
+    if (!resultJSON) {
+        return [HttpInvokerResult createFialedResultWithMessage:@"Interanl Error."];
+    }
+    
+    if ([[resultJSON objectForKey:@"result"] intValue] > 0) {
+        return [HttpInvokerResult createSuccessfulResultWithData:[resultJSON objectForKey:@"data"]];
+    } else {
+        return [HttpInvokerResult createFialedResultWithMessage:[resultJSON objectForKey:@"message"]];
+    }
 }
 
 @end

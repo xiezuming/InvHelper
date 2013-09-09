@@ -12,6 +12,8 @@
 
 + (PhotoDao *) instance;
 
+-(NSString *) getPhotoPath:(NSString *) photoName;
+
 -(UIImage *)getImageByPhotoName:(NSString*) photoName;
 
 -(UIImage *)getScaleImageByPhotoName:(NSString *)photoName
