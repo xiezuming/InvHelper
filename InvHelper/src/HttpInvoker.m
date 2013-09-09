@@ -28,6 +28,10 @@
     return [[HttpInvokerResult alloc] init:true :nil :dataIn];
 }
 
++(id) createSuccessfulResultWithMessage:(NSString *)messageIn {
+    return [[HttpInvokerResult alloc] init:true :messageIn :nil];
+}
+
 +(id) createFialedResultWithMessage:(NSString *)messageIn {
     return [[HttpInvokerResult alloc] init:false :messageIn :nil];
 }

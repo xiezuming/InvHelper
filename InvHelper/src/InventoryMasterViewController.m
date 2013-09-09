@@ -18,7 +18,15 @@
 
 static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 
+@interface InventoryMasterViewController()
+
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
+
+@end
+
 @implementation InventoryMasterViewController
+
+@synthesize uploadButton;
 
 - (void)awakeFromNib
 {
@@ -164,10 +172,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
         return;
     }
     
-    NSMutableDictionary *params;
-    HttpInvokerResult *result;
-    
-    result = [HttpInvoker call:@"get_user" WithParams:[[NSDictionary alloc] initWithObjectsAndKeys:userName, @"userName", password, @"password",nil]];
+    HttpInvokerResult *result = [HttpInvoker call:@"get_user" WithParams:[[NSDictionary alloc] initWithObjectsAndKeys:userName, @"userName", password, @"password",nil]];
     if (![result isOK]) {
         UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
                                                               message:[result message]
@@ -178,56 +183,77 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
         return;
     }
     
-    NSNumber *userId = [[result data] objectForKey:@"userId"];
-    
-    InventoryItemDao *itemDao = [InventoryItemDao instance];
-    NSUInteger itemCount = [itemDao countOfList];
-    for (int i = 0; i < itemCount; i++) {
-        InventoryItem *item = [itemDao objectInListAtIndex:i];
-        params = [[NSMutableDictionary alloc] initWithDictionary:[InventoryItemHelper convertItemToDict:item KeepType:true]];
-        [params setObject:userId forKey:@"userId"];
-        result = [HttpInvoker call:@"add_item" WithParams:params];
-        if (![result isOK]) {
-            [[[UIAlertView alloc] initWithTitle:@"Error"
-                                        message:[NSString stringWithFormat:@"Failed to upload item[%d]: %@", i+1, [result message]]
-                                       delegate:nil
-                              cancelButtonTitle:@"OK"
-                              otherButtonTitles: nil] show];
-            return;
-        }
-        
-        NSMutableArray *photoPaths = [[NSMutableArray alloc] init];
-        if ([item photoname1])
-            [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname1]]];
-        if ([item photoname2])
-            [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname2]]];
-        if ([item photoname3])
-            [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname3]]];
-        
-        params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:userId, @"userId", nil];
-        for (NSString *photoPath in photoPaths) {
-            result = [HttpInvoker uploadFile:photoPath WithParams:params];
-            if (![result isOK]) {
-                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                      message:[NSString stringWithFormat:@"Failed to upload the photo file of item[%d]: %@", i+1, [result message]]
-                                                                     delegate:nil
-                                                            cancelButtonTitle:@"OK"
-                                                            otherButtonTitles: nil];
-                [myAlertView show];
-                return;
-            }
-        }
-        
-    }
+    [uploadButton setTitle:@"Upload..."];
+    [uploadButton setEnabled:FALSE];
+    [NSThread detachNewThreadSelector:@selector(uploadInBackground:)
+                             toTarget:self
+                           withObject:[[result data] objectForKey:@"userId"]];
+}
 
+
+-(void)uploadInBackground:(id) userId{
     
+    HttpInvokerResult *result = nil;
     
+    NSUInteger itemCount = [[InventoryItemDao instance] countOfList];
+    for (NSUInteger i = 0; i < itemCount; i++) {
+        HttpInvokerResult *r = [self uploadItemAtIndex:i WithUserId:userId];
+        if (!r.isOK) {
+            result = r;
+            break;
+        }
+    }
     
-    UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Message"
-                                                          message:[NSString stringWithFormat:@"Upload all items successfully.\nItems: %d", itemCount]
+    if (!result) {
+        result = [HttpInvokerResult createSuccessfulResultWithMessage:[NSString stringWithFormat:@"Upload all items successfully.\nItems: %d", itemCount]];
+    }
+    
+    [self performSelectorOnMainThread:@selector(afterUpload:) withObject:result waitUntilDone:TRUE];
+}
+
+-(HttpInvokerResult *)uploadItemAtIndex:(NSUInteger)index WithUserId:(id)userId{
+    HttpInvokerResult *result;
+    InventoryItem *item = [[InventoryItemDao instance] objectInListAtIndex:index];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:[InventoryItemHelper convertItemToDict:item KeepType:true]];
+    [params setObject:userId forKey:@"userId"];
+    result = [HttpInvoker call:@"add_item" WithParams:params];
+    if (!result.isOK) {
+        return [HttpInvokerResult createFialedResultWithMessage:
+                [NSString stringWithFormat:@"Failed to upload item[%d]: %@", index+1, [result message]]];
+    }
+    
+    NSMutableArray *photoPaths = [[NSMutableArray alloc] init];
+    if ([item photoname1])
+        [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname1]]];
+    if ([item photoname2])
+        [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname2]]];
+    if ([item photoname3])
+        [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname3]]];
+    
+    params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:userId, @"userId", nil];
+    for (NSString *photoPath in photoPaths) {
+        result = [HttpInvoker uploadFile:photoPath WithParams:params];
+        if (!result.isOK) {
+            return [HttpInvokerResult createFialedResultWithMessage:
+                    [NSString stringWithFormat:@"Failed to upload the photo file of item[%d]: %@", index, [result message]]];
+        }
+    }
+    
+    return [HttpInvokerResult createSuccessfulResultWithData:nil];
+}
+
+-(void)afterUpload:(id) result {
+    [uploadButton setTitle:@"Upload"];
+    [uploadButton setEnabled:TRUE];
+
+    HttpInvokerResult *r = result;
+
+    UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:r.isOK ? @"Message" : @"Error"
+                                                          message:r.message
                                                          delegate:nil
                                                 cancelButtonTitle:@"OK"
                                                 otherButtonTitles: nil];
     [myAlertView show];
 }
+
 @end

@@ -15,6 +15,7 @@
 @property (readonly, nonatomic, retain) NSDictionary * data;
 
 +(id) createSuccessfulResultWithData:(NSDictionary *)data;
++(id) createSuccessfulResultWithMessage:(NSString *)message;
 +(id) createFialedResultWithMessage:(NSString *)message;
 
 @end
