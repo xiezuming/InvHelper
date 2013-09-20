@@ -117,7 +117,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setHTTPShouldHandleCookies:NO];
-    [request setTimeoutInterval:30];
+    [request setTimeoutInterval:120];
     [request setHTTPMethod: @"POST"];
     
     // set Content-Type in HTTP header

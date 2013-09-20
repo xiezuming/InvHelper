@@ -21,12 +21,15 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 @interface InventoryMasterViewController()
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
+@property NSDictionary *userInfo;
 
 @end
 
 @implementation InventoryMasterViewController
 
 @synthesize uploadButton;
+@synthesize userInfo;
+
 
 - (void)awakeFromNib
 {
@@ -172,7 +175,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
         return;
     }
     
-    HttpInvokerResult *result = [HttpInvoker call:@"get_user" WithParams:[[NSDictionary alloc] initWithObjectsAndKeys:userName, @"userName", password, @"password",nil]];
+    HttpInvokerResult *result = [HttpInvoker call:@"login" WithParams:[[NSDictionary alloc] initWithObjectsAndKeys:userName, @"userName", password, @"password",nil]];
     if (![result isOK]) {
         UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
                                                               message:[result message]
@@ -185,19 +188,20 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     
     [uploadButton setTitle:@"Upload..."];
     [uploadButton setEnabled:FALSE];
-    [NSThread detachNewThreadSelector:@selector(uploadInBackground:)
+    userInfo = [result data];
+    [NSThread detachNewThreadSelector:@selector(uploadInBackground)
                              toTarget:self
-                           withObject:[[result data] objectForKey:@"userId"]];
+                           withObject:nil];
 }
 
 
--(void)uploadInBackground:(id) userId{
+-(void)uploadInBackground {
     
     HttpInvokerResult *result = nil;
     
     NSUInteger itemCount = [[InventoryItemDao instance] countOfList];
     for (NSUInteger i = 0; i < itemCount; i++) {
-        HttpInvokerResult *r = [self uploadItemAtIndex:i WithUserId:userId];
+        HttpInvokerResult *r = [self uploadItemAtIndex:i];
         if (!r.isOK) {
             result = r;
             break;
@@ -211,11 +215,11 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     [self performSelectorOnMainThread:@selector(afterUpload:) withObject:result waitUntilDone:TRUE];
 }
 
--(HttpInvokerResult *)uploadItemAtIndex:(NSUInteger)index WithUserId:(id)userId{
+-(HttpInvokerResult *)uploadItemAtIndex:(NSUInteger)index{
     HttpInvokerResult *result;
     InventoryItem *item = [[InventoryItemDao instance] objectInListAtIndex:index];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:[InventoryItemHelper convertItemToDict:item KeepType:true]];
-    [params setObject:userId forKey:@"userId"];
+    [params setValuesForKeysWithDictionary:userInfo];
     result = [HttpInvoker call:@"add_item" WithParams:params];
     if (!result.isOK) {
         return [HttpInvokerResult createFialedResultWithMessage:
@@ -230,7 +234,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     if ([item photoname3])
         [photoPaths addObject:[[PhotoDao instance] getPhotoPath:[item photoname3]]];
     
-    params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:userId, @"userId", nil];
+    params = [[NSMutableDictionary alloc] initWithDictionary:userInfo];
     for (NSString *photoPath in photoPaths) {
         result = [HttpInvoker uploadFile:photoPath WithParams:params];
         if (!result.isOK) {
