@@ -9,12 +9,14 @@ const UPLOAD_BASE_PATH = '/var/uploads/';
  *
  * @property Inv_item_model $inv_item_model
  * @property Inv_user_model $inv_user_model
+ * @property Inv_price_model $inv_price_model
  */
 class Inv extends CI_Controller {
 	function __construct() {
 		parent::__construct ();
 		$this->load->model ( 'inv_item_model' );
 		$this->load->model ( 'inv_user_model' );
+		$this->load->model ( 'inv_price_model' );
 	}
 	public function user_page() {
 		$this->load->helper ( 'form' );
@@ -48,6 +50,7 @@ class Inv extends CI_Controller {
 		}
 	}
 	private function check_token() {
+		return NULL;
 		$userId = $this->input->post ( 'userId' );
 		$token = $this->input->post ( 'token' );
 		$check = $this->inv_user_model->check_user ( $userId, $token );
@@ -85,7 +88,7 @@ class Inv extends CI_Controller {
 			unlink ( $file_path );
 		}
 	}
-	public function add_item_page() {
+	public function item_page() {
 		$this->load->helper ( 'form' );
 		$this->load->library ( 'form_validation' );
 		
@@ -127,6 +130,31 @@ class Inv extends CI_Controller {
 				'error' => ' ' 
 		) );
 	}
+	public function query_item_price() {
+		$check = $this->check_token ();
+		if ($check) {
+			echo json_encode ( $check );
+			return;
+		}
+		
+		$barcode = $this->input->post ( 'barcode' );
+		$title = $this->input->post ( 'title' );
+		if (isset ( $barcode ) || isset ( $title )) {
+			$inv_search_result = $this->inv_price_model->query_inv_price ( $barcode, $title );
+			if ($inv_search_result) {
+				$data ['result'] = SUCCESS;
+				$data ['data'] = $inv_search_result;
+			} else {
+				$data ['result'] = FAILURE;
+				$data ['message'] = 'There is no matched item in the server.';
+			}
+		} else {
+			$data ['result'] = FAILURE;
+			$data ['message'] = 'Internal Error.';
+		}
+		echo json_encode ( $data );
+	}
+	
 	private function get_field_names() {
 		$field_names = array (
 				"userId" => "userId",

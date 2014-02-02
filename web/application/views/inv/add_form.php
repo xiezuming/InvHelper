@@ -22,4 +22,11 @@ foreach ( $field_names as $field_name ) {
 
 <input type="submit" name="submit" value="Add Item" />
 <hr />
+<?php echo '</form>'?>
+
+<?php echo form_open('inv/query_item_price')?>
+Barcode: <input name="barcode" /> <br/>
+Title: <input name="title" /> <br/>
+<input type="submit" name="submit" value="Query" />
+<?php echo '</form>'?>
 

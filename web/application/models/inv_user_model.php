@@ -17,11 +17,6 @@ class Inv_user_model extends CI_Model {
 		$query = $this->db->get_where ( self::TABLE_USER, $where );
 		$user = $query->row_array ();
 		if ($user) {
-			$data = array (
-					'token' => $this->rand_string ( 32 ) 
-			);
-			$this->db->where ( 'userId', $user ['userId'] );
-			$this->db->update ( self::TABLE_USER, $data );
 			$data ['userId'] = $user ['userId'];
 			return $data;
 		}

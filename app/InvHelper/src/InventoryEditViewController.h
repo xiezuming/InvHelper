@@ -36,9 +36,16 @@
 @property (weak, nonatomic) IBOutlet UIButton *photo1DeleteButton;
 @property (weak, nonatomic) IBOutlet UIButton *photo2DeleteButton;
 
+// Call image picker to get the photo
 - (IBAction)photoImageViewClick:(id)sender;
+// Delete the attached photo image
 - (IBAction)touchPhotoDelete:(id)sender;
+// Call libbar to scan the bar code and set in into the UI
 - (IBAction)scanBarCode:(id)sender;
+// Query item deatil information from the server and set the retrieved values into the UI
+- (IBAction)retrieveItemPrice:(id)sender;
+// Update UI location field basd on LocationManager interface
 - (IBAction)updateLocation:(id)sender;
+
 
 @end

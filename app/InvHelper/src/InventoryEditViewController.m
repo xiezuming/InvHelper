@@ -10,6 +10,7 @@
 #import "InventoryItem.h"
 #import "InventoryItemDao.h"
 #import "PhotoDao.h"
+#import "HttpInvoker.h"
 #import <QuartzCore/QuartzCore.h>
 
 static const CGSize PHOTO_THUMBNAIL_SIZE = {60, 60};
@@ -334,6 +335,7 @@ const int TAG_BARCODE = 2010;
         for(symbol in results)
             break;
         _barCodeTextField.text = symbol.data;
+        [self queryPrice:TRUE];
         //resultImage.image = [info objectForKey: UIImagePickerControllerOriginalImage];
     } else {
         UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
@@ -404,6 +406,41 @@ const int TAG_BARCODE = 2010;
     [self presentViewController:reader animated:YES completion:NULL];
 }
 
+- (IBAction)retrieveItemPrice:(id)sender {
+    [self queryPrice:TRUE];
+}
+
+-(void)queryPrice:(BOOL) isShowMessage {
+    HttpInvokerResult *result;
+    if ([_barCodeTextField.text length] == 0 && [_titleTextField.text length] == 0) {
+        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Information"
+                                                              message:@"Please input Bar Code or Title first."
+                                                             delegate:nil
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles: nil];
+        
+        [myAlertView show];
+        return;
+    }
+    
+    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:_barCodeTextField.text, @"barcode", _titleTextField.text, @"title", nil];
+    
+    result = [HttpInvoker call:@"query_item_price" WithParams:params];
+    NSString *message = result.message;
+    if (result.isOK) {
+        double price = [[result.data objectForKey:@"price"] doubleValue];
+        [_priceTextField setText:[NSString stringWithFormat:@"%.2f", price]];
+        message = @"Query successfully.";
+    }
+    if (isShowMessage) {
+        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Information"
+                                                              message:message
+                                                             delegate:nil
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles: nil];
+        [myAlertView show];
+    }
+}
 /**************** Image Picker and Barcode Scan End ****************/
 
 /**************** Location Manager Begin ****************/
