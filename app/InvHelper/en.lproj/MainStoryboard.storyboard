@@ -312,21 +312,20 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uwj-8T-RpY">
-                                                    <rect key="frame" x="278" y="10" width="22" height="22"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uwj-8T-RpY">
+                                                    <rect key="frame" x="271" y="11" width="29" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="22" id="pnS-0V-vt2"/>
+                                                        <constraint firstAttribute="width" constant="29" id="pZH-a1-lOm"/>
+                                                        <constraint firstAttribute="height" constant="21" id="qnt-8f-699"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                                    <state key="normal" image="scan.png">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
+                                                    <state key="normal" title="Scan"/>
                                                     <connections>
                                                         <action selector="scanBarCode:" destination="Jac-V7-Nln" eventType="touchDown" id="LsL-MG-d7G"/>
                                                     </connections>
                                                 </button>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Uc-Aq-f6E">
-                                                    <rect key="frame" x="118" y="6" width="152" height="30"/>
+                                                    <rect key="frame" x="118" y="6" width="145" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="79" id="7WP-EO-SsM"/>
                                                     </constraints>
@@ -338,15 +337,14 @@
                                                 </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="uwj-8T-RpY" firstAttribute="centerY" secondItem="3Uc-Aq-f6E" secondAttribute="centerY" id="0PS-mf-xY2"/>
-                                                <constraint firstItem="4s6-2C-a4e" firstAttribute="bottom" secondItem="uwj-8T-RpY" secondAttribute="bottom" id="1Vo-2h-lWU"/>
+                                                <constraint firstAttribute="centerY" secondItem="3Uc-Aq-f6E" secondAttribute="centerY" id="COs-au-l3t"/>
                                                 <constraint firstItem="uwj-8T-RpY" firstAttribute="centerY" secondItem="lm1-mn-JzZ" secondAttribute="centerY" id="Led-UP-rue"/>
+                                                <constraint firstItem="4s6-2C-a4e" firstAttribute="top" secondItem="lm1-mn-JzZ" secondAttribute="top" constant="11" id="Rh8-UD-kut"/>
                                                 <constraint firstItem="uwj-8T-RpY" firstAttribute="leading" secondItem="3Uc-Aq-f6E" secondAttribute="trailing" constant="8" symbolic="YES" id="gAd-aR-WgD"/>
                                                 <constraint firstAttribute="trailing" secondItem="uwj-8T-RpY" secondAttribute="trailing" constant="20" symbolic="YES" id="jet-K7-69e"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <constraints>
-                                            <constraint firstItem="3Uc-Aq-f6E" firstAttribute="centerY" secondItem="4s6-2C-a4e" secondAttribute="centerY" id="2OS-eF-spH"/>
                                             <constraint firstItem="4s6-2C-a4e" firstAttribute="leading" secondItem="p8J-tL-2iX" secondAttribute="leading" constant="20" id="U1u-NM-UC1"/>
                                             <constraint firstItem="3Uc-Aq-f6E" firstAttribute="leading" secondItem="4s6-2C-a4e" secondAttribute="trailing" constant="8" symbolic="YES" id="egH-Yx-g0U"/>
                                         </constraints>
@@ -595,7 +593,7 @@
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0mH-Rw-LSU">
-                                                    <rect key="frame" x="118" y="7" width="152" height="30"/>
+                                                    <rect key="frame" x="118" y="7" width="140" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="79" id="mgV-U7-0pj"/>
                                                     </constraints>
@@ -605,22 +603,29 @@
                                                         <outlet property="delegate" destination="Jac-V7-Nln" id="gRw-qr-6Jg"/>
                                                     </connections>
                                                 </textField>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mbP-VQ-rL4">
-                                                    <rect key="frame" x="278" y="11" width="22" height="22"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mbP-VQ-rL4">
+                                                    <rect key="frame" x="266" y="11" width="34" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" image="query.png">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="CGs-A7-Z8V"/>
+                                                        <constraint firstAttribute="width" constant="34" id="dkp-Zy-Suf"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                                    <state key="normal" title="Query"/>
                                                     <connections>
                                                         <action selector="retrieveItemPrice:" destination="Jac-V7-Nln" eventType="touchDown" id="jgO-78-Opm"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="mbP-VQ-rL4" secondAttribute="trailing" constant="20" symbolic="YES" id="Wbc-pp-ZOi"/>
+                                                <constraint firstItem="mbP-VQ-rL4" firstAttribute="leading" secondItem="0mH-Rw-LSU" secondAttribute="trailing" constant="8" symbolic="YES" id="fZG-is-7L0"/>
+                                                <constraint firstAttribute="centerY" secondItem="mbP-VQ-rL4" secondAttribute="centerY" id="hb8-D8-j5O"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <constraints>
                                             <constraint firstItem="0mH-Rw-LSU" firstAttribute="leading" secondItem="QDd-mU-xSv" secondAttribute="trailing" constant="8" symbolic="YES" id="ALq-Jz-5OG"/>
                                             <constraint firstItem="QDd-mU-xSv" firstAttribute="top" secondItem="mRc-N4-qzd" secondAttribute="top" constant="11" id="T8l-Np-T7H"/>
-                                            <constraint firstAttribute="trailing" secondItem="0mH-Rw-LSU" secondAttribute="trailing" constant="50" id="VWK-eh-3Yu"/>
                                             <constraint firstItem="0mH-Rw-LSU" firstAttribute="centerY" secondItem="mRc-N4-qzd" secondAttribute="centerY" id="iaH-ei-Td2"/>
                                             <constraint firstItem="QDd-mU-xSv" firstAttribute="leading" secondItem="mRc-N4-qzd" secondAttribute="leading" constant="20" id="qyV-tq-W3k"/>
                                         </constraints>
@@ -709,7 +714,7 @@
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="999" text="Location" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZVt-5c-N6U">
                                                     <rect key="frame" x="20" y="11" width="90" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="90" id="scY-NR-nuZ"/>
+                                                        <constraint firstAttribute="width" constant="90" id="DxD-Qy-DDJ"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -725,11 +730,7 @@
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aZM-4X-Qxy">
-                                                    <rect key="frame" x="245" y="11" width="55" height="22"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="22" id="9sq-HK-cgU"/>
-                                                        <constraint firstAttribute="width" constant="55" id="nMM-hv-F8r"/>
-                                                    </constraints>
+                                                    <rect key="frame" x="258" y="11" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                                     <state key="normal" title="Update">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -739,17 +740,17 @@
                                                     </connections>
                                                 </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ZVt-5c-N6U" firstAttribute="leading" secondItem="A5a-Zd-Z0O" secondAttribute="leading" constant="20" symbolic="YES" id="0Af-8f-Hf3"/>
+                                                <constraint firstItem="aZM-4X-Qxy" firstAttribute="centerY" secondItem="A5a-Zd-Z0O" secondAttribute="centerY" id="5nY-Fc-1mO"/>
+                                                <constraint firstItem="ZVt-5c-N6U" firstAttribute="top" secondItem="A5a-Zd-Z0O" secondAttribute="top" constant="11" id="Jhf-E3-9gi"/>
+                                                <constraint firstItem="ZVt-5c-N6U" firstAttribute="baseline" secondItem="zQt-H4-SEw" secondAttribute="baseline" id="Njq-2E-G3f"/>
+                                                <constraint firstItem="zQt-H4-SEw" firstAttribute="leading" secondItem="ZVt-5c-N6U" secondAttribute="trailing" constant="8" symbolic="YES" id="Uxq-JJ-fUj"/>
+                                                <constraint firstAttribute="trailing" secondItem="aZM-4X-Qxy" secondAttribute="trailing" constant="20" symbolic="YES" id="WgS-sK-MfV"/>
+                                                <constraint firstItem="ZVt-5c-N6U" firstAttribute="top" secondItem="zQt-H4-SEw" secondAttribute="top" id="ho8-cC-8pF"/>
+                                                <constraint firstItem="aZM-4X-Qxy" firstAttribute="top" secondItem="zQt-H4-SEw" secondAttribute="top" id="kxB-TF-etr"/>
+                                            </constraints>
                                         </tableViewCellContentView>
-                                        <constraints>
-                                            <constraint firstItem="zQt-H4-SEw" firstAttribute="baseline" secondItem="ZVt-5c-N6U" secondAttribute="baseline" id="ORa-FA-tlo"/>
-                                            <constraint firstItem="aZM-4X-Qxy" firstAttribute="top" secondItem="zQt-H4-SEw" secondAttribute="top" id="U0Q-5A-6fs"/>
-                                            <constraint firstItem="zQt-H4-SEw" firstAttribute="top" secondItem="ZVt-5c-N6U" secondAttribute="top" id="beU-vb-f5z"/>
-                                            <constraint firstItem="ZVt-5c-N6U" firstAttribute="leading" secondItem="mb4-Vg-vwz" secondAttribute="leading" constant="20" id="cB0-fa-eBO"/>
-                                            <constraint firstItem="aZM-4X-Qxy" firstAttribute="centerY" secondItem="mb4-Vg-vwz" secondAttribute="centerY" id="caF-PK-c4f"/>
-                                            <constraint firstItem="aZM-4X-Qxy" firstAttribute="baseline" secondItem="zQt-H4-SEw" secondAttribute="baseline" id="qRh-Gq-1sq"/>
-                                            <constraint firstItem="zQt-H4-SEw" firstAttribute="leading" secondItem="ZVt-5c-N6U" secondAttribute="trailing" constant="8" symbolic="YES" id="qYQ-zE-SQV"/>
-                                            <constraint firstAttribute="trailing" secondItem="aZM-4X-Qxy" secondAttribute="trailing" constant="20" id="yE7-j7-iVI"/>
-                                        </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="100" id="Aik-56-PGH">
                                         <rect key="frame" x="0.0" y="536" width="320" height="100"/>
@@ -824,6 +825,7 @@
                         <outlet property="pickerToolbar" destination="RVX-Ig-p7a" id="84Y-v2-lIm"/>
                         <outlet property="priceTextField" destination="0mH-Rw-LSU" id="JPu-z5-cyU"/>
                         <outlet property="quantityTextField" destination="9dx-g8-UeI" id="dkv-eO-sMI"/>
+                        <outlet property="queryPriceButton" destination="mbP-VQ-rL4" id="LVS-Im-sVP"/>
                         <outlet property="sizeTextField" destination="BRm-aB-iqa" id="edV-6T-nFV"/>
                         <outlet property="titleTextField" destination="DFX-v2-YK6" id="T2t-Tm-8Da"/>
                         <outlet property="updateLocationButton" destination="aZM-4X-Qxy" id="DnE-jB-rW9"/>
@@ -1266,8 +1268,6 @@
     </scenes>
     <resources>
         <image name="delete.png" width="16" height="16"/>
-        <image name="query.png" width="16" height="16"/>
-        <image name="scan.png" width="16" height="16"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

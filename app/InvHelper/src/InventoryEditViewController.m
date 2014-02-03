@@ -410,37 +410,6 @@ const int TAG_BARCODE = 2010;
     [self queryPrice:TRUE];
 }
 
--(void)queryPrice:(BOOL) isShowMessage {
-    HttpInvokerResult *result;
-    if ([_barCodeTextField.text length] == 0 && [_titleTextField.text length] == 0) {
-        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Information"
-                                                              message:@"Please input Bar Code or Title first."
-                                                             delegate:nil
-                                                    cancelButtonTitle:@"OK"
-                                                    otherButtonTitles: nil];
-        
-        [myAlertView show];
-        return;
-    }
-    
-    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:_barCodeTextField.text, @"barcode", _titleTextField.text, @"title", nil];
-    
-    result = [HttpInvoker call:@"query_item_price" WithParams:params];
-    NSString *message = result.message;
-    if (result.isOK) {
-        double price = [[result.data objectForKey:@"price"] doubleValue];
-        [_priceTextField setText:[NSString stringWithFormat:@"%.2f", price]];
-        message = @"Query successfully.";
-    }
-    if (isShowMessage) {
-        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Information"
-                                                              message:message
-                                                             delegate:nil
-                                                    cancelButtonTitle:@"OK"
-                                                    otherButtonTitles: nil];
-        [myAlertView show];
-    }
-}
 /**************** Image Picker and Barcode Scan End ****************/
 
 /**************** Location Manager Begin ****************/
@@ -497,8 +466,54 @@ const int TAG_BARCODE = 2010;
         _locationLabel.text = nil;
     }
 }
-
 /**************** Location Manager End ****************/
+
+/**************** Query Price Begin ****************/
+-(void)queryPrice:(BOOL) isShowMessage {
+    if ([_barCodeTextField.text length] == 0 && [_titleTextField.text length] == 0) {
+        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Information"
+                                                              message:@"Please input Bar Code or Title first."
+                                                             delegate:nil
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles: nil];
+        [myAlertView show];
+        return;
+    }
+    
+    _queryPriceButton.enabled = FALSE;
+    [NSThread detachNewThreadSelector:@selector(quickPriceInBackground:)
+                             toTarget:self
+                           withObject:[NSNumber numberWithBool:isShowMessage]];
+}
+
+-(void)quickPriceInBackground:(NSNumber *) isShowMessage {
+    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:_barCodeTextField.text, @"barcode", _titleTextField.text, @"title", nil];
+    
+    HttpInvokerResult *result = [HttpInvoker call:@"query_item_price" WithParams:params];
+    
+    [self performSelectorOnMainThread:@selector(afterQueryPrice:) withObject:@[result,isShowMessage] waitUntilDone:TRUE];
+}
+
+-(void)afterQueryPrice:(NSArray*) array {
+    _queryPriceButton.enabled = TRUE;
+    HttpInvokerResult *result = [array objectAtIndex:0];
+    NSNumber *isShowMessage = [array objectAtIndex:1];
+    NSString *message = result.message;
+    if (result.isOK) {
+        double price = [[result.data objectForKey:@"price"] doubleValue];
+        [_priceTextField setText:[NSString stringWithFormat:@"%.2f", price]];
+        message = @"Query successfully.";
+    }
+    if (isShowMessage.boolValue) {
+        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Information"
+                                                              message:message
+                                                             delegate:nil
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles: nil];
+        [myAlertView show];
+    }
+}
+/**************** Query Price End ****************/
 
 - (IBAction)inputAccessoryViewDidFinish:(id)sender {
     [_currentTextField resignFirstResponder];
