@@ -616,6 +616,10 @@
                                                         <action selector="retrieveItemPrice:" destination="Jac-V7-Nln" eventType="touchDown" id="jgO-78-Opm"/>
                                                     </connections>
                                                 </button>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="TQg-SC-bHa">
+                                                    <rect key="frame" x="266" y="12" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="mbP-VQ-rL4" secondAttribute="trailing" constant="20" symbolic="YES" id="Wbc-pp-ZOi"/>
@@ -826,6 +830,7 @@
                         <outlet property="priceTextField" destination="0mH-Rw-LSU" id="JPu-z5-cyU"/>
                         <outlet property="quantityTextField" destination="9dx-g8-UeI" id="dkv-eO-sMI"/>
                         <outlet property="queryPriceButton" destination="mbP-VQ-rL4" id="LVS-Im-sVP"/>
+                        <outlet property="queryPriceSpinner" destination="TQg-SC-bHa" id="Hos-r1-wWH"/>
                         <outlet property="sizeTextField" destination="BRm-aB-iqa" id="edV-6T-nFV"/>
                         <outlet property="titleTextField" destination="DFX-v2-YK6" id="T2t-Tm-8Da"/>
                         <outlet property="updateLocationButton" destination="aZM-4X-Qxy" id="DnE-jB-rW9"/>

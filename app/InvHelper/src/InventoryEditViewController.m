@@ -132,6 +132,8 @@ const int TAG_BARCODE = 2010;
     
     [self refreshPhotos];
 
+    [_queryPriceButton setTitle:@"" forState:UIControlStateDisabled];
+    
     _createdPhotoNames = [[NSMutableArray alloc] init];
     _deletedPhotoNames = [[NSMutableArray alloc] init];
     
@@ -480,7 +482,8 @@ const int TAG_BARCODE = 2010;
         return;
     }
     
-    _queryPriceButton.enabled = FALSE;
+    [_queryPriceButton setEnabled:FALSE];
+    [_queryPriceSpinner startAnimating];
     [NSThread detachNewThreadSelector:@selector(quickPriceInBackground:)
                              toTarget:self
                            withObject:[NSNumber numberWithBool:isShowMessage]];
@@ -496,6 +499,7 @@ const int TAG_BARCODE = 2010;
 
 -(void)afterQueryPrice:(NSArray*) array {
     _queryPriceButton.enabled = TRUE;
+    [_queryPriceSpinner stopAnimating];
     HttpInvokerResult *result = [array objectAtIndex:0];
     NSNumber *isShowMessage = [array objectAtIndex:1];
     NSString *message = result.message;
