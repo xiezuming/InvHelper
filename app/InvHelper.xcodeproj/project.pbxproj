@@ -48,6 +48,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BF10D82218A08DC3001978F6 /* InvHelper 0.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "InvHelper 0.2.xcdatamodel"; sourceTree = "<group>"; };
 		BF5EC62317BFD2EB001811DF /* InventoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InventoryItem.h; path = src/InventoryItem.h; sourceTree = "<group>"; };
 		BF5EC62417BFD2EB001811DF /* InventoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InventoryItem.m; path = src/InventoryItem.m; sourceTree = "<group>"; };
 		BF5EC62617BFEE4E001811DF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -521,9 +522,10 @@
 		BF8349B317BFBD8700F0A026 /* InvHelper.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				BF10D82218A08DC3001978F6 /* InvHelper 0.2.xcdatamodel */,
 				BF8349B417BFBD8700F0A026 /* InvHelper.xcdatamodel */,
 			);
-			currentVersion = BF8349B417BFBD8700F0A026 /* InvHelper.xcdatamodel */;
+			currentVersion = BF10D82218A08DC3001978F6 /* InvHelper 0.2.xcdatamodel */;
 			path = InvHelper.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

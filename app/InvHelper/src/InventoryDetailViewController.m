@@ -33,15 +33,16 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {60, 60};
 - (void)configureView
 {
     if (_invertoryItem) {
-        _titleLabel.text = _invertoryItem.title;
-        _barCodeLabel.text = _invertoryItem.barcode;
-        _quantityLabel.text = _invertoryItem.quantity.description;
+        _titleLabel.text = [_invertoryItem title];
+        _barCodeLabel.text = [_invertoryItem barcode];
+        _statusLabel.text = [_invertoryItem status];
+        _quantityLabel.text = [[_invertoryItem quantity] stringValue];
         _categoryLabel.text = [_invertoryItem category];
         _conditionLabel.text = [_invertoryItem condition];
-        _priceLabel.text = _invertoryItem.price.description;
+        _priceLabel.text = [[_invertoryItem price] stringValue];
         _sizeLabel.text = [_invertoryItem size];
         _weightLabel.text = [_invertoryItem weight];
-        _descriptionLabel.text = _invertoryItem.desc;
+        _descriptionLabel.text = [_invertoryItem desc];
         [self setLatitude:_invertoryItem.latitude AndLongitude:_invertoryItem.longitude];
         
         PhotoDao *photoDao = [PhotoDao instance];
@@ -56,6 +57,11 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {60, 60};
         _photo3ImageView.image = [photoDao getScaleImageByPhotoName:_invertoryItem.photoname3
                                                         toScaleSize:PHOTO_THUMBNAIL_SIZE];
     }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [NSString stringWithFormat:@"ID: %@", [_invertoryItem itemId]];
 }
 
 -(void)setLatitude:(NSNumber *)latitude AndLongitude:(NSNumber *)longitude {

@@ -25,6 +25,7 @@
 @property (nonatomic, retain) NSNumber * price;
 @property (nonatomic, retain) NSNumber * quantity;
 @property (nonatomic, retain) NSString * size;
+@property (nonatomic, retain) NSString * status;
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * weight;
 @property (nonatomic, retain) NSDate * createDate;

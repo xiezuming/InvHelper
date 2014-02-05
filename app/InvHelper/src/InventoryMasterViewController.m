@@ -16,6 +16,7 @@
 #import "HttpInvoker.h"
 #import "PhotoDao.h"
 
+static const int SEARCH_SCOPE_ALL = 0;
 static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 
 @interface InventoryMasterViewController()
@@ -62,20 +63,34 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[InventoryItemDao instance] countOfList];
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return [[InventoryItemDao instance] countOfFilteredList];
+    } else {
+        return [[InventoryItemDao instance] countOfList];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"InventoryItemCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if ( cell == nil ) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
     
-    InventoryItem *item = [[InventoryItemDao instance] objectInListAtIndex:indexPath.row];
+    InventoryItem *item;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        item = [[InventoryItemDao instance] objectInFilteredListAtIndex:indexPath.row];
+    } else {
+        item = [[InventoryItemDao instance] objectInListAtIndex:indexPath.row];
+    }
     
-    [[cell textLabel] setText:item.title];
+    NSString *title = [NSString stringWithFormat:@"%@: %@", item.itemId, item.title];
+    [[cell textLabel] setText: title];
     [[cell detailTextLabel] setText:item.desc];
     [[cell imageView] setImage:[[PhotoDao instance] getScaleImageByPhotoName:item.photoname1
                                                                  toScaleSize:PHOTO_THUMBNAIL_SIZE]];
+    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     return cell;
 }
 
@@ -103,11 +118,65 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     }
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self performSegueWithIdentifier:@"showInventoryItemDetail" sender:tableView];
+}
+
+#pragma mark - UISearchDisplayController Delegate Methods
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    searchString = [searchString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *scope = [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]];
+    [[InventoryItemDao instance] filterContentForSearchText:searchString scope:scope];
+    return YES;
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption {
+    NSString *searchString = [self.searchDisplayController.searchBar.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *scope = [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption];
+    [[InventoryItemDao instance] filterContentForSearchText:searchString scope:scope];
+    return YES;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self initiateSearch];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    [self initiateSearch];
+}
+
+-(void)initiateSearch {
+    // The UISearchDisplayController is implemented in a way that the results table won't be shown until some text is entered. There's also a bug report about this: ID# 8839635. The main thing is to add an extra character for the scope(s) that you want to show search results for automatically, but ensure that you remove it for the scope(s) that you do not want to do this.
+    NSString *searchText = self.searchDisplayController.searchBar.text;
+    NSString *strippedText = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (strippedText.length != 0) {
+        return;
+    }
+    NSInteger scope = self.searchDisplayController.searchBar.selectedScopeButtonIndex;
+    if (scope == SEARCH_SCOPE_ALL) {
+        if ((strippedText.length == 0) && (searchText.length != 0)) {
+            self.searchDisplayController.searchBar.text = @"";
+        }
+    } else if (searchText.length == 0){
+        self.searchDisplayController.searchBar.text = @" ";
+    }
+}
+
+#pragma mark - Segue
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showInventoryItemDetail"]) {
         InventoryDetailViewController *detailViewController = [segue destinationViewController];
-        detailViewController.invertoryItem = [[InventoryItemDao instance] objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
+        InventoryItem *selectedItem;
+        if(sender == self.searchDisplayController.searchResultsTableView) {
+            NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
+            selectedItem = [[InventoryItemDao instance] objectInFilteredListAtIndex:indexPath.row];
+        }
+        else {
+            NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+            selectedItem = [[InventoryItemDao instance] objectInListAtIndex:indexPath.row];
+        }
+        detailViewController.invertoryItem = selectedItem;
     }
 }
 

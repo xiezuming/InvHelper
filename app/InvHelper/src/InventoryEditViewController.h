@@ -18,6 +18,7 @@
 @property (strong, nonatomic) InventoryItem *inventoryItem;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 
+@property (weak, nonatomic) IBOutlet UITextField *statusTextField;
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextField *barCodeTextField;
 @property (weak, nonatomic) IBOutlet UITextField *quantityTextField;

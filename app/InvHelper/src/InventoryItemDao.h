@@ -26,4 +26,8 @@
 
 - (Boolean)exportAllDataToFile:(NSString *) fileName;
 
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope;
+- (NSUInteger)countOfFilteredList;
+- (InventoryItem *)objectInFilteredListAtIndex:(NSUInteger)theIndex;
+
 @end

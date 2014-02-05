@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *photo1ImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *photo2ImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *photo3ImageView;
+@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *quantityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *conditionLabel;

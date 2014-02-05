@@ -14,6 +14,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 static const CGSize PHOTO_THUMBNAIL_SIZE = {60, 60};
+static NSString *STATUS_DEFAULT = @"Available";
 
 @interface InventoryEditViewController ()
 
@@ -48,6 +49,7 @@ const int TAG_WEIGHT = 2007;
 const int TAG_DESCRIPTION = 2008;
 const int TAG_LOCATION = 2009;
 const int TAG_BARCODE = 2010;
+const int TAG_STATUS = 2010;
 
 @implementation InventoryEditViewController
 
@@ -73,6 +75,9 @@ const int TAG_BARCODE = 2010;
         [self.tagToPickerDataDict setObject:[[NSArray alloc] initWithObjects:
                                              @"", @"Heavy", @"Light", nil]
                                      forKey:[NSNumber numberWithInt:TAG_WEIGHT]];
+        [self.tagToPickerDataDict setObject:[[NSArray alloc] initWithObjects:
+                                             @"", @"Available", @"Not available", nil]
+                                     forKey:[NSNumber numberWithInt:TAG_STATUS]];
         
         _tagToPickerViewDict = [NSMutableDictionary dictionary];
         _tagToTextFieldDict = [NSMutableDictionary dictionary];
@@ -89,6 +94,7 @@ const int TAG_BARCODE = 2010;
     
     [self prepareTextFiled:_titleTextField withTag:TAG_TITLE isPickerView:FALSE];
     [self prepareTextFiled:_barCodeTextField withTag:TAG_BARCODE isPickerView:FALSE];
+    [self prepareTextFiled:_statusTextField withTag:TAG_STATUS isPickerView:TRUE];
     [self prepareTextFiled:_quantityTextField withTag:TAG_QUANTITY isPickerView:FALSE];
     [self prepareTextFiled:_categoryTextField withTag:TAG_CATEGORY isPickerView:TRUE];
     [self prepareTextFiled:_conditionTextField withTag:TAG_CONDITION isPickerView:TRUE];
@@ -114,6 +120,7 @@ const int TAG_BARCODE = 2010;
     if (_isUpdate) {
         _titleTextField.text = _inventoryItem.title;
         _barCodeTextField.text = _inventoryItem.barcode;
+        _statusTextField.text = _inventoryItem.status;
         _quantityTextField.text = _inventoryItem.quantity.description;
         _categoryTextField.text = _inventoryItem.category;
         _conditionTextField.text = _inventoryItem.condition;
@@ -146,6 +153,11 @@ const int TAG_BARCODE = 2010;
     
     // Start the location manager.
     [[self locationManager] startUpdatingLocation];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return _isUpdate?[NSString stringWithFormat:@"ID: %@", [_inventoryItem itemId]]:nil;
 }
 
 -(void) refreshPhotos {
@@ -214,6 +226,7 @@ const int TAG_BARCODE = 2010;
         _inventoryItem.photoname1 = _photoNames.count<1 ? nil : [_photoNames objectAtIndex:0];
         _inventoryItem.photoname2 = _photoNames.count<2 ? nil : [_photoNames objectAtIndex:1];
         _inventoryItem.photoname3 = _photoNames.count<3 ? nil : [_photoNames objectAtIndex:2];
+        _inventoryItem.status = [_statusTextField.text length]==0 ? STATUS_DEFAULT : _statusTextField.text;
         _inventoryItem.quantity =  [NSNumber numberWithInt:[_quantityTextField.text intValue]];
         _inventoryItem.category = _categoryTextField.text;
         _inventoryItem.condition = _conditionTextField.text;
@@ -263,6 +276,7 @@ const int TAG_BARCODE = 2010;
             _categoryTextField.text = category;
         }
     }
+    _statusTextField.text = STATUS_DEFAULT;
 }
 // **************** Input Default End ****************/
 

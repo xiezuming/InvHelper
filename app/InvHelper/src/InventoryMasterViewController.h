@@ -10,7 +10,9 @@
 
 @class InventoryItemDao;
 
-@interface InventoryMasterViewController : UITableViewController
+@interface InventoryMasterViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate>
+
+@property IBOutlet UISearchBar *itemSearchBar;
 
 - (IBAction)done:(UIStoryboardSegue *)segue;
 - (IBAction)cancel:(UIStoryboardSegue *)segue;

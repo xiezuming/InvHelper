@@ -16,7 +16,8 @@ static InventoryItemDao *instance = nil;
 
 @interface InventoryItemDao()
 
-@property (nonatomic, copy) NSMutableArray *invertoryItemList;
+@property (nonatomic, copy) NSMutableArray *itemArray;
+@property (nonatomic, copy) NSMutableArray *filteredItemArray;
 @property NSUInteger nextId;
 
 @end
@@ -24,6 +25,8 @@ static InventoryItemDao *instance = nil;
 @implementation InventoryItemDao
 
 @synthesize managedObjectContext;
+@synthesize itemArray;
+@synthesize filteredItemArray;
 
 - (id)init {
     if (self = [super init]) {
@@ -40,30 +43,30 @@ static InventoryItemDao *instance = nil;
 }
 
 - (NSUInteger)countOfList {
-    return [self.invertoryItemList count];
+    return [self.itemArray count];
 }
 
 - (InventoryItem *)objectInListAtIndex:(NSUInteger)theIndex {
-    return [self.invertoryItemList objectAtIndex:theIndex];
+    return [self.itemArray objectAtIndex:theIndex];
 }
 
 - (InventoryItem *)createInventoryItem {
     InventoryItem *item = [NSEntityDescription insertNewObjectForEntityForName:@"Item" inManagedObjectContext:managedObjectContext];
     item.itemId = [NSNumber numberWithInt:_nextId++];
-    [self.invertoryItemList addObject:item];
+    [self.itemArray addObject:item];
     return item;
 }
 
 - (void)removeInventoryItem:(InventoryItem *)item {
     [managedObjectContext deleteObject:item];
     if ([self saveContext]) {
-        [self.invertoryItemList removeObject:item];
+        [self.itemArray removeObject:item];
     }
 }
 
 - (Boolean)exportAllDataToFile:(NSString *) fileName {
     NSMutableArray *outputArray = [[NSMutableArray alloc] init];
-    for (InventoryItem *item in _invertoryItemList) {
+    for (InventoryItem *item in itemArray) {
         [outputArray addObject:[InventoryItemHelper convertItemToDict:item KeepType:false]];
     }
     
@@ -99,17 +102,42 @@ static InventoryItemDao *instance = nil;
     [request setSortDescriptors:sortDescriptors];
     
     NSError *error = nil;
-    _invertoryItemList = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    if (_invertoryItemList == nil) {
+    itemArray = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    if (itemArray == nil) {
         NSLog(@"Failed to load data: %@", [error localizedDescription]);
-        _invertoryItemList = [[NSMutableArray alloc] initWithCapacity:10];
+        itemArray = [[NSMutableArray alloc] initWithCapacity:10];
     }
     
-    if (_invertoryItemList.count > 0) {
-        _nextId = [[_invertoryItemList[0] itemId] intValue] + 1;
+    if (itemArray.count > 0) {
+        _nextId = [[itemArray[0] itemId] intValue] + 1;
     } else {
         _nextId = 1;
     }
+    
+    filteredItemArray = [NSMutableArray arrayWithCapacity:[itemArray count]];
+}
+
+-(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
+    [filteredItemArray removeAllObjects];
+    NSArray *tempArray = itemArray;
+    if ([searchText length] > 0) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.title CONTAINS[c] %@ OR SELF.barcode CONTAINS[c] %@", searchText, searchText];
+        tempArray = [itemArray filteredArrayUsingPredicate:predicate];
+    }
+
+    if (![scope isEqualToString:@"All"]) {
+        NSPredicate *scopePredicate = [NSPredicate predicateWithFormat:@"SELF.status == %@",scope];
+        tempArray = [tempArray filteredArrayUsingPredicate:scopePredicate];
+    }
+    filteredItemArray = [NSMutableArray arrayWithArray:tempArray];
+}
+
+- (NSUInteger)countOfFilteredList {
+    return [filteredItemArray count];
+}
+
+- (InventoryItem *)objectInFilteredListAtIndex:(NSUInteger)theIndex {
+    return [filteredItemArray objectAtIndex:theIndex];
 }
 
 - (Boolean)saveContext

@@ -24,6 +24,7 @@
 @dynamic price;
 @dynamic quantity;
 @dynamic size;
+@dynamic status;
 @dynamic title;
 @dynamic weight;
 @dynamic createDate;
