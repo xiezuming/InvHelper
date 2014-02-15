@@ -95,13 +95,14 @@ class Inv extends CI_Controller {
 		$data ['field_names'] = $this->get_field_names ();
 		$this->load->view ( 'inv/add_form', $data );
 	}
-	function upload($userId = 0) {
+	function upload() {
 		$check = $this->check_token ();
 		if ($check) {
 			echo json_encode ( $check );
 			return;
 		}
-		
+
+		$userId = $this->input->post ( 'userId' );
 		$upload_path = UPLOAD_BASE_PATH . $userId;
 		if (! file_exists ( $upload_path )) {
 			mkdir ( $upload_path );
