@@ -15,7 +15,7 @@
 |
 */
 $active_item = 'local';
-$base_url_arr['local'] = 'http://192.168.10.6/inv/';
+$base_url_arr['local'] = 'http://192.168.10.7/inv/';
 $base_url_arr['happitail'] = 'http://happitail.dyndns.info/inv/';
 
 $config['base_url'] = $base_url_arr[$active_item];

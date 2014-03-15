@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *statusTextField;
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextField *barCodeTextField;
+@property (weak, nonatomic) IBOutlet UITextField *marketTextField;
 @property (weak, nonatomic) IBOutlet UITextField *quantityTextField;
 @property (weak, nonatomic) IBOutlet UITextField *categoryTextField;
 @property (weak, nonatomic) IBOutlet UITextField *conditionTextField;

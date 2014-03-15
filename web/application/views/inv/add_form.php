@@ -21,12 +21,25 @@ foreach ( $field_names as $field_name ) {
 </table>
 
 <input type="submit" name="submit" value="Add Item" />
-<hr />
 <?php echo '</form>'?>
+
+<hr/>
 
 <?php echo form_open('inv/query_item_price')?>
 Barcode: <input name="barcode" /> <br/>
 Title: <input name="title" /> <br/>
+<input type="submit" name="submit" value="Query" />
+<?php echo '</form>'?>
+
+<hr/>
+
+<?php echo form_open('inv/query_recommendation_info')?>
+barcode,title,category,market,condition
+Barcode: <input name="barcode" /> <br/>
+Title: <input name="title" /> <br/>
+Category: <input name="category" /> <br/>
+Market: <input name="market" /> <br/>
+Condition: <input name="condition" /> <br/>
 <input type="submit" name="submit" value="Query" />
 <?php echo '</form>'?>
 

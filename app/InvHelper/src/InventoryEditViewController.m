@@ -49,7 +49,9 @@ const int TAG_WEIGHT = 2007;
 const int TAG_DESCRIPTION = 2008;
 const int TAG_LOCATION = 2009;
 const int TAG_BARCODE = 2010;
-const int TAG_STATUS = 2010;
+const int TAG_STATUS = 2011;
+const int TAG_MARKET = 2012;
+
 
 @implementation InventoryEditViewController
 
@@ -78,6 +80,9 @@ const int TAG_STATUS = 2010;
         [self.tagToPickerDataDict setObject:[[NSArray alloc] initWithObjects:
                                              @"", @"Available", @"Not available", nil]
                                      forKey:[NSNumber numberWithInt:TAG_STATUS]];
+        [self.tagToPickerDataDict setObject:[[NSArray alloc] initWithObjects:
+                                             @"", @"Amazon trade in", @"Amazon market", @"eBay", @"Craigslist", nil]
+                                     forKey:[NSNumber numberWithInt:TAG_MARKET]];
         
         _tagToPickerViewDict = [NSMutableDictionary dictionary];
         _tagToTextFieldDict = [NSMutableDictionary dictionary];
@@ -94,6 +99,7 @@ const int TAG_STATUS = 2010;
     
     [self prepareTextFiled:_titleTextField withTag:TAG_TITLE isPickerView:FALSE];
     [self prepareTextFiled:_barCodeTextField withTag:TAG_BARCODE isPickerView:FALSE];
+    [self prepareTextFiled:_marketTextField withTag:TAG_MARKET isPickerView:TRUE];
     [self prepareTextFiled:_statusTextField withTag:TAG_STATUS isPickerView:TRUE];
     [self prepareTextFiled:_quantityTextField withTag:TAG_QUANTITY isPickerView:FALSE];
     [self prepareTextFiled:_categoryTextField withTag:TAG_CATEGORY isPickerView:TRUE];
@@ -120,6 +126,7 @@ const int TAG_STATUS = 2010;
     if (_isUpdate) {
         _titleTextField.text = _inventoryItem.title;
         _barCodeTextField.text = _inventoryItem.barcode;
+        _marketTextField.text = _inventoryItem.market;
         _statusTextField.text = _inventoryItem.status;
         _quantityTextField.text = _inventoryItem.quantity.description;
         _categoryTextField.text = _inventoryItem.category;
@@ -223,6 +230,7 @@ const int TAG_STATUS = 2010;
 
         _inventoryItem.title = _titleTextField.text;
         _inventoryItem.barcode = _barCodeTextField.text;
+        _inventoryItem.market = _marketTextField.text;
         _inventoryItem.photoname1 = _photoNames.count<1 ? nil : [_photoNames objectAtIndex:0];
         _inventoryItem.photoname2 = _photoNames.count<2 ? nil : [_photoNames objectAtIndex:1];
         _inventoryItem.photoname3 = _photoNames.count<3 ? nil : [_photoNames objectAtIndex:2];
@@ -351,7 +359,7 @@ const int TAG_STATUS = 2010;
         for(symbol in results)
             break;
         _barCodeTextField.text = symbol.data;
-        [self queryPrice:TRUE];
+        [self queryRecommendationInfo:TRUE];
         //resultImage.image = [info objectForKey: UIImagePickerControllerOriginalImage];
     } else {
         UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
@@ -423,7 +431,7 @@ const int TAG_STATUS = 2010;
 }
 
 - (IBAction)retrieveItemPrice:(id)sender {
-    [self queryPrice:TRUE];
+    [self queryRecommendationInfo:TRUE];
 }
 
 /**************** Image Picker and Barcode Scan End ****************/
@@ -484,8 +492,8 @@ const int TAG_STATUS = 2010;
 }
 /**************** Location Manager End ****************/
 
-/**************** Query Price Begin ****************/
--(void)queryPrice:(BOOL) isShowMessage {
+/**************** Query Recommendation Info Begin ****************/
+-(void)queryRecommendationInfo:(BOOL) isShowMessage {
     if ([_barCodeTextField.text length] == 0 && [_titleTextField.text length] == 0) {
         UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Information"
                                                               message:@"Please input Bar Code or Title first."
@@ -498,15 +506,20 @@ const int TAG_STATUS = 2010;
     
     [_queryPriceButton setEnabled:FALSE];
     [_queryPriceSpinner startAnimating];
-    [NSThread detachNewThreadSelector:@selector(quickPriceInBackground:)
+    [NSThread detachNewThreadSelector:@selector(quickRecommendationInfoInBackground:)
                              toTarget:self
                            withObject:[NSNumber numberWithBool:isShowMessage]];
 }
 
--(void)quickPriceInBackground:(NSNumber *) isShowMessage {
-    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:_barCodeTextField.text, @"barcode", _titleTextField.text, @"title", nil];
+-(void)quickRecommendationInfoInBackground:(NSNumber *) isShowMessage {
+    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:
+                            _barCodeTextField.text, @"barcode",
+                            _titleTextField.text, @"title",
+                            _categoryTextField.text, @"category",
+                            _conditionTextField.text, @"condition",
+                            nil];
     
-    HttpInvokerResult *result = [HttpInvoker call:@"query_item_price" WithParams:params];
+    HttpInvokerResult *result = [HttpInvoker call:@"query_recommendation_info" WithParams:params];
     
     [self performSelectorOnMainThread:@selector(afterQueryPrice:) withObject:@[result,isShowMessage] waitUntilDone:TRUE];
 }
@@ -518,8 +531,25 @@ const int TAG_STATUS = 2010;
     NSNumber *isShowMessage = [array objectAtIndex:1];
     NSString *message = result.message;
     if (result.isOK) {
-        double price = [[result.data objectForKey:@"price"] doubleValue];
-        [_priceTextField setText:[NSString stringWithFormat:@"%.2f", price]];
+        if ([result.data objectForKey:@"barcode"]) {
+            _barCodeTextField.text = [result.data objectForKey:@"barcode"];
+        }
+        if ([result.data objectForKey:@"title"]) {
+            _titleTextField.text = [result.data objectForKey:@"title"];
+        }
+        if ([result.data objectForKey:@"category"]) {
+            _categoryTextField.text = [result.data objectForKey:@"category"];
+        }
+        if ([result.data objectForKey:@"market"]) {
+            _marketTextField.text = [result.data objectForKey:@"market"];
+        }
+        if ([result.data objectForKey:@"condition"]) {
+            _conditionTextField.text = [result.data objectForKey:@"condition"];
+        }
+        if ([result.data objectForKey:@"price"]) {
+            double price = [[result.data objectForKey:@"price"] doubleValue];
+            [_priceTextField setText:[NSString stringWithFormat:@"%.2f", price]];
+        }
         message = @"Query successfully.";
     }
     if (isShowMessage.boolValue) {
@@ -531,7 +561,7 @@ const int TAG_STATUS = 2010;
         [myAlertView show];
     }
 }
-/**************** Query Price End ****************/
+/**************** Query Recommendation Info End ****************/
 
 - (IBAction)inputAccessoryViewDidFinish:(id)sender {
     [_currentTextField resignFirstResponder];

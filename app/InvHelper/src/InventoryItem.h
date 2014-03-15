@@ -13,6 +13,7 @@
 @interface InventoryItem : NSManagedObject
 
 @property (nonatomic, retain) NSString * barcode;
+@property (nonatomic, retain) NSString * market;
 @property (nonatomic, retain) NSString * category;
 @property (nonatomic, retain) NSString * condition;
 @property (nonatomic, retain) NSString * desc;

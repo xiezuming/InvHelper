@@ -12,6 +12,7 @@
 @implementation InventoryItem
 
 @dynamic barcode;
+@dynamic market;
 @dynamic category;
 @dynamic condition;
 @dynamic desc;

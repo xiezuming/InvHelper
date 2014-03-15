@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF23C87718D402C800122B86 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF23C87618D402C800122B86 /* Images.xcassets */; };
 		BF5EC62517BFD2EB001811DF /* InventoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BF5EC62417BFD2EB001811DF /* InventoryItem.m */; };
 		BF5EC62717BFEE4E001811DF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF5EC62617BFEE4E001811DF /* CoreLocation.framework */; };
 		BF5EC64C17BFF6B5001811DF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF5EC64B17BFF6B5001811DF /* AVFoundation.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -48,7 +49,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BF10D82218A08DC3001978F6 /* InvHelper 0.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "InvHelper 0.2.xcdatamodel"; sourceTree = "<group>"; };
+		BF10D82218A08DC3001978F6 /* InvHelper 0.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "InvHelper 0.2.xcdatamodel"; sourceTree = "<group>"; };
+		BF23C87618D402C800122B86 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BF5EC62317BFD2EB001811DF /* InventoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InventoryItem.h; path = src/InventoryItem.h; sourceTree = "<group>"; };
 		BF5EC62417BFD2EB001811DF /* InventoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InventoryItem.m; path = src/InventoryItem.m; sourceTree = "<group>"; };
 		BF5EC62617BFEE4E001811DF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -274,6 +276,7 @@
 				BF83499F17BFBD8700F0A026 /* Supporting Files */,
 				BFC98FB117DA490400F7DAD4 /* HttpInvoker.h */,
 				BFC98FB217DA490400F7DAD4 /* HttpInvoker.m */,
+				BF23C87618D402C800122B86 /* Images.xcassets */,
 			);
 			path = InvHelper;
 			sourceTree = "<group>";
@@ -324,6 +327,11 @@
 				CLASSPREFIX = Inventory;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = Self;
+				TargetAttributes = {
+					BF83499217BFBD8700F0A026 = {
+						DevelopmentTeam = 76BNLQFAE2;
+					};
+				};
 			};
 			buildConfigurationList = BF83498E17BFBD8700F0A026 /* Build configuration list for PBXProject "InvHelper" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -350,6 +358,7 @@
 				BF8349A317BFBD8700F0A026 /* InfoPlist.strings in Resources */,
 				BF6EDC51189C9C0500558F74 /* zbar-back.png in Resources */,
 				BF6EDC53189C9C0500558F74 /* zbar-helpicons.png in Resources */,
+				BF23C87718D402C800122B86 /* Images.xcassets in Resources */,
 				BF8349B217BFBD8700F0A026 /* MainStoryboard.storyboard in Resources */,
 				BF6EDC31189C96F800558F74 /* query.png in Resources */,
 				BF6EDC2F189C94B900558F74 /* scan.png in Resources */,
@@ -409,6 +418,60 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		BF23C87418D3FD7D00122B86 /* ForBeta */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = ForBeta;
+		};
+		BF23C87518D3FD7D00122B86 /* ForBeta */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconBeta;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				BUNDLE_DISPLAY_NAME_SUFFIX = .b;
+				BUNDLE_IDENTIFIER = com.happitail.InvHelperBeta;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zuming Xie (76BNLQFAE2)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "InvHelper/InvHelper-Prefix.pch";
+				INFOPLIST_FILE = "InvHelper/InvHelper-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/InvHelper/ZBarSDK",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = ForBeta;
+		};
 		BF8349BC17BFBD8700F0A026 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -468,14 +531,21 @@
 		BF8349BF17BFBD8700F0A026 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				BUNDLE_DISPLAY_NAME_SUFFIX = .d;
+				BUNDLE_IDENTIFIER = com.happitail.InvHelperDev;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "InvHelper/InvHelper-Prefix.pch";
 				INFOPLIST_FILE = "InvHelper/InvHelper-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/InvHelper/ZBarSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -483,14 +553,21 @@
 		BF8349C017BFBD8700F0A026 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
+				BUNDLE_IDENTIFIER = com.happitail.InvHelper;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "InvHelper/InvHelper-Prefix.pch";
 				INFOPLIST_FILE = "InvHelper/InvHelper-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/InvHelper/ZBarSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -502,19 +579,21 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BF8349BC17BFBD8700F0A026 /* Debug */,
+				BF23C87418D3FD7D00122B86 /* ForBeta */,
 				BF8349BD17BFBD8700F0A026 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		BF8349BE17BFBD8700F0A026 /* Build configuration list for PBXNativeTarget "InvHelper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BF8349BF17BFBD8700F0A026 /* Debug */,
+				BF23C87518D3FD7D00122B86 /* ForBeta */,
 				BF8349C017BFBD8700F0A026 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 
