@@ -13,8 +13,8 @@
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
-        imageView=[[UIImageView alloc]initWithCoder:aDecoder];
-		[self addSubview:imageView];
+        //imageView=[[UIImageView alloc]initWithCoder:aDecoder];
+		//[self addSubview:imageView];
         [self setUserInteractionEnabled:YES];
 		[self setMultipleTouchEnabled:YES];
 		scale=1;
@@ -28,7 +28,8 @@
 	lensRect=imageView.frame;
     scale = (float)lensRect.size.width / originImage.size.width;
 	[self moveToX:0 ToY:0];
-}	
+}
+
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 	if ([touches count]==2) {//识别两点触摸,并记录两点间距离
 		NSArray* twoTouches=[touches allObjects];

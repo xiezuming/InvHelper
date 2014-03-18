@@ -13,7 +13,7 @@
 @interface MoveScaleImageView : UIView {
 	UIImage* originImage;//原图
 	
-	UIImageView* imageView;
+    __weak IBOutlet UIImageView *imageView;
 	CGPoint gestureStartPoint;//手势开始时起点
 	CGFloat offsetX,offsetY;//移动时x,y方向上的偏移量
 

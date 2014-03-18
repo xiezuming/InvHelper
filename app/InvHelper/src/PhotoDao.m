@@ -81,7 +81,7 @@ static PhotoDao *instance = nil;
     NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
     NSString *photoName = [NSString stringWithFormat:@"%d.jpg", (int)timeStamp];
     NSString *filePath = [self getPhotoPath:photoName];
-    [UIImageJPEGRepresentation(image, 0.2) writeToFile:filePath atomically:YES];
+    [UIImageJPEGRepresentation(image, 0.5) writeToFile:filePath atomically:YES];
     [_addedPhotoPaths addObject:filePath];
     NSLog(@"Add photo:  %@", filePath);
     return photoName;

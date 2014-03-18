@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="3">
     <dependencies>
         <deployment defaultVersion="1552" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -1378,18 +1378,15 @@
             <objects>
                 <viewController id="9ug-70-Rvz" customClass="PhotoViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="QNL-L2-JoR"/>
-                        <viewControllerLayoutGuide type="bottom" id="AqX-bk-62f"/>
+                        <viewControllerLayoutGuide type="top" id="ccz-eF-tOy"/>
+                        <viewControllerLayoutGuide type="bottom" id="gsP-bm-XUk"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="uvj-pb-ixR" customClass="MoveScaleImageView">
+                    <view key="view" contentMode="scaleToFill" id="cHR-Ij-AKb">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Photo" id="CZH-ZB-3AI"/>
-                    <connections>
-                        <outlet property="photoImageView" destination="uvj-pb-ixR" id="Hqr-4z-swG"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KdC-yA-VBJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1424,6 +1421,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="fRr-jm-XOI"/>
-        <segue reference="gby-xV-RL6"/>
+        <segue reference="Ify-on-h3e"/>
     </inferredMetricsTieBreakers>
 </document>

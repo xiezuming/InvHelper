@@ -12,6 +12,6 @@
 @interface PhotoViewController : UIViewController
 
 @property (strong, nonatomic) NSString *photoName;
-@property (strong, nonatomic) IBOutlet MoveScaleImageView *photoImageView;
+@property (strong, nonatomic) IBOutlet UIImageView *imageView;
 
 @end

@@ -64,9 +64,18 @@ const int TAG_MARKET = 2012;
     {
         // Custom initialization
         _tagToPickerDataDict = [NSMutableDictionary dictionary];
+//        [self.tagToPickerDataDict setObject:[[NSArray alloc] initWithObjects:
+//                                             @"", @"Book", @"DVD-Game", @"Electronics",
+//                                             @"Fumiture", @"Toy-Baby", nil]
+//                                     forKey:[NSNumber numberWithInt:TAG_CATEGORY]];
         [self.tagToPickerDataDict setObject:[[NSArray alloc] initWithObjects:
-                                             @"", @"Book", @"DVD-Game", @"Electronics",
-                                             @"Fumiture", @"Toy-Baby", nil]
+                                             @"", @"Books", @"Movies, Music, Games",
+                                             @"Electronics, Computers", @"Home, Garden, Tools",
+                                             @"Beauty, Health, Grocery", @"Toys, Kids, Baby",
+                                             @"Clothing, Shows, Jewelry", @"Sports, Outdoors",
+                                             @"Automotive, Industry", @"Furniture",
+                                             @"Appliances",@"Everything Else",
+                                             @"Gift Cards",@"Collectibles", nil]
                                      forKey:[NSNumber numberWithInt:TAG_CATEGORY]];
         [self.tagToPickerDataDict setObject:[[NSArray alloc] initWithObjects:
                                              @"", @"New", @"Used-good", @"Used-fair", @"Used-poor", nil]
