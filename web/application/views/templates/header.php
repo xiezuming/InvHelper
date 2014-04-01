@@ -12,7 +12,7 @@
 	<table style="width: 100%">
 		<tr>
 			<td>
-				<h3>Happitail Customer Service System</h3>
+				<h3>InvHelper</h3>
 			</td>
 			<td align="right" valign="bottom"><?php echo welcome_left()?>
 			</td>

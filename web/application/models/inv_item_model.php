@@ -19,5 +19,10 @@ class Inv_item_model extends CI_Model {
 		);
 		$this->db->delete ( self::TABLE_ITEM, $where );
 	}
+	
+	public function get_inv_list(){
+		$query = $this->db->get( self::TABLE_ITEM );
+		return $query->result_array();
+	}
 }
 ?>

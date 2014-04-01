@@ -111,7 +111,7 @@ class Inv extends CI_Controller {
 		
 		$config ['upload_path'] = $upload_path;
 		$config ['allowed_types'] = 'gif|jpg|png';
-		$config ['max_size'] = '1024';
+		$config ['max_size'] = '5120';
 		$config ['overwrite'] = TRUE;
 		
 		$this->load->library ( 'upload', $config );
