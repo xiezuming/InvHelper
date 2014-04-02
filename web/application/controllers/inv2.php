@@ -4,6 +4,7 @@ if (! defined ( 'BASEPATH' ))
 const SUCCESS = 1;
 const FAILURE = 0;
 const UPLOAD_BASE_PATH = '/var/uploads/';
+const THUMBNAILS_BASE_PATH = '/var/uploads/thumbnails/';
 
 /**
  *
@@ -21,7 +22,9 @@ class Inv2 extends CI_Controller {
 	
 	public function index()
 	{
-		$data['invs'] = $this->inv_item_model->get_inv_list();
+		$where = "inv_item.itemId <> 3";
+		$data['invs'] = $this->inv_item_model->get_available_inv_list($where);
+		$data['count'] = $this->inv_item_model->count_available_inv_list($where);
 		$data['title'] = 'Inv List';
 
 		$this->load->view('templates/header', $data);
@@ -39,22 +42,6 @@ class Inv2 extends CI_Controller {
 		$data['title'] = 'Inv Details';
 		
 		$data['match_items'] = $this->call_query_items_script($data['inv']['title']);
-		// Mock data
-		/*$data['match_items'] = array(
-			1	=>	array(
-				"title"		=>	"Garmin forerunner 620 gps fitness computer black / blue train wristwatch watch",
-				"url"		=>	"http://www.ebay.com/itm/Garmin-forerunner-620-gps-fitness-computer-black-blue-train-wristwatch-watch-/151210376553?pt=LH_DefaultDomain_0&hash=item2334d73d69",
-				"price"		=>	'399.99',
-				"image"		=>	'http://i.ebayimg.com/00/s/NjQwWDQ2Ng==/z/haMAAOxyXDhSojfU/$_3.JPG'
-			),
-			2	=>	array(
-				"title"		=>	"Xiaomi RED RICE Hongmi Android 4.2 Quad Core 1.5G 1G RAM Dual Sim 3G Smartphone",
-				"url"		=>	"http://www.ebay.com/itm/Xiaomi-RED-RICE-Hongmi-Android-4-2-Quad-Core-1-5G-1G-RAM-Dual-Sim-3G-Smartphone-/151239857913?pt=Cell_Phones&hash=item23369916f9",
-				"price"		=>	'218.28',
-				"image"		=>	'http://i.ebayimg.com/00/s/ODAwWDgwMA==/z/afYAAOxy-WxTCwL6/$_3.JPG'
-			),
-		);
-		*/
 		
 		$this->load->helper('form');
 		
@@ -78,7 +65,58 @@ class Inv2 extends CI_Controller {
 					array('type'=>'message', 'content'=>'Item['.$userId.'-'.$itemId.'] is linked. <br/>'.$link_url));
 			redirect(site_url("/inv2/"), 'refresh');
 		}
+	}
+	
+	public function image_orignal($userId, $file_name)
+	{
+		$orignal_file_path = UPLOAD_BASE_PATH . $userId . DIRECTORY_SEPARATOR . $file_name;
+		$this->image($orignal_file_path);
+	}
+	
+	public function image_thumbnail($userId, $file_name)
+	{
+		$orignal_file_path = UPLOAD_BASE_PATH . $userId . DIRECTORY_SEPARATOR . $file_name;
+		if (!file_exists($orignal_file_path)) {
+			show_404();
+		}
+		
+		// create floder
+		$thumbnail_folder_path = THUMBNAILS_BASE_PATH . $userId;
+		if (! file_exists ( $thumbnail_folder_path )) {
+			mkdir ( $thumbnail_folder_path, 0777, TRUE );
+		}
+		
+		$thumbnail_file_path = THUMBNAILS_BASE_PATH . $userId . DIRECTORY_SEPARATOR . $file_name;
+		if (!file_exists($thumbnail_file_path)) {
+			// create thumbnail
+			$orig_img = imagecreatefromjpeg($orignal_file_path);
+			
+			$info = getimagesize($orignal_file_path);
+			$width = $info[0];
+			$height = $info[1];
+			$newWidth = 100;
+			$newHeight = ($height / $width) * $newWidth;
+			$thumbnail_img = imagecreatetruecolor($newWidth, $newHeight);
+			
+			imagecopyresampled($thumbnail_img, $orig_img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+			imagejpeg($thumbnail_img, $thumbnail_file_path);
+		}
 
+		$this->image($thumbnail_file_path);
+	}
+	
+	private function image($file_path)
+	{
+		if (!file_exists($file_path)) {
+			show_404();
+		}
+		
+		header('Content-Length: '.filesize($file_path)); //<-- sends filesize header
+		header('Content-Type: image/jpg'); //<-- send mime-type header
+		header('Content-Disposition: inline; filename="'.$file_path.'";'); //<-- sends filename header
+		readfile($file_path); //<--reads and outputs the file onto the output buffer
+		die(); //<--cleanup
+		exit; //and exit
 	}
 	
 	private function call_query_items_script($title)

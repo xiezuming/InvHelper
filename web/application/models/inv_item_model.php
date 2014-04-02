@@ -20,9 +20,22 @@ class Inv_item_model extends CI_Model {
 		$this->db->delete ( self::TABLE_ITEM, $where );
 	}
 	
-	public function get_inv_list(){
-		$query = $this->db->get( self::TABLE_ITEM );
+	public function get_available_inv_list($where){
+		$this->db->select('*');
+		$this->db->from('inv_item');
+		$this->db->join('inv_search_result', 'inv_item.userId = inv_search_result.userId and inv_item.itemId = inv_search_result.itemId');
+		$this->db->where($where);
+		$this->db->limit(10);
+		$query = $this->db->get();
 		return $query->result_array();
+	}
+	
+	public function count_available_inv_list($where){
+		$this->db->select('*');
+		$this->db->from('inv_item');
+		$this->db->join('inv_search_result', 'inv_item.userId = inv_search_result.userId and inv_item.itemId = inv_search_result.itemId');
+		$this->db->where($where);
+		return $this->db->count_all_results();
 	}
 }
 ?>
