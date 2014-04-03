@@ -1,5 +1,5 @@
 <br/>
-
+<?php echo anchor('/inv2', 'Back')?>
 <table>
 	<tr>
 		<th>Id</th>
