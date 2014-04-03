@@ -27,6 +27,7 @@ class Inv_item_model extends CI_Model {
 		if (isset($where) && $where)
 			$this->db->where($where, NULL, FALSE);
 		$this->db->limit(10);
+		$this->db->order_by("inv_item.userId asc, inv_item.itemId asc");
 		$query = $this->db->get();
 		return $query->result_array();
 	}
