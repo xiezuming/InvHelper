@@ -24,7 +24,8 @@ class Inv_item_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('inv_item');
 		$this->db->join('inv_search_result', 'inv_item.userId = inv_search_result.userId and inv_item.itemId = inv_search_result.itemId');
-		$this->db->where($where);
+		if (isset($where) && $where)
+			$this->db->where($where, NULL, FALSE);
 		$this->db->limit(10);
 		$query = $this->db->get();
 		return $query->result_array();
@@ -34,7 +35,8 @@ class Inv_item_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('inv_item');
 		$this->db->join('inv_search_result', 'inv_item.userId = inv_search_result.userId and inv_item.itemId = inv_search_result.itemId');
-		$this->db->where($where);
+		if (isset($where) && $where)
+			$this->db->where($where, NULL, FALSE);
 		return $this->db->count_all_results();
 	}
 }

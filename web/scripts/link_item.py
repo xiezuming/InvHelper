@@ -20,3 +20,7 @@ except:
 #TODO add link algorithm
 #input: data['userId']...
 
+result = {"message" : "Can't connect to DB"};
+print 'test';
+print '***|||RESULT|||***';
+print json.dumps(result);

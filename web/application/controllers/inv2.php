@@ -5,7 +5,7 @@ const SUCCESS = 1;
 const FAILURE = 0;
 const UPLOAD_BASE_PATH = '/var/uploads/';
 const THUMBNAILS_BASE_PATH = '/var/uploads/thumbnails/';
-
+const PYTHON_PLACEHOLD = '***|||RESULT|||***';
 /**
  *
  * @property Inv_item_model $inv_item_model
@@ -22,10 +22,15 @@ class Inv2 extends CI_Controller {
 	
 	public function index()
 	{
-		$where = "inv_item.itemId <> 3";
+		$this->load->helper('form');
+		
+		
+		$where = $this->input->post ( 'where' );
+		//"inv_item.itemId <> 3";
 		$data['invs'] = $this->inv_item_model->get_available_inv_list($where);
 		$data['count'] = $this->inv_item_model->count_available_inv_list($where);
 		$data['title'] = 'Inv List';
+		$data['where'] = $where;
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('inv2/index', $data);
@@ -56,9 +61,9 @@ class Inv2 extends CI_Controller {
 		// Call python script. Link the inventory item with eBay item url
 		$result = $this->call_link_script($userId, $itemId, $link_url);
 		
-		if (isset($result)) {
+		if (isset($result) && isset($result['message'])) {
 			$this->session->set_flashdata('falshmsg',
-					array('type'=>'error', 'content'=>'Failed to link. <br/>'.$result));
+					array('type'=>'error', 'content'=>'Failed to link the item. <br/>Cause: '.$result['message']));
 			redirect(site_url("/inv2/details/".$userId.'/'.$itemId), 'refresh');
 		} else {
 			$this->session->set_flashdata('falshmsg',
@@ -124,8 +129,7 @@ class Inv2 extends CI_Controller {
 		$data = array($title);
 		$cmd = FCPATH . 'scripts' . DIRECTORY_SEPARATOR . 'query_matched_items.py';
 		$result = shell_exec('python ' . $cmd . ' ' . escapeshellarg(json_encode($data)));
-		$result = json_decode($result, true);
-		return $result;
+		return $this->get_real_result($result);
 	}
 	
 	private function call_link_script($userId, $itemId, $link_url)
@@ -133,6 +137,16 @@ class Inv2 extends CI_Controller {
 		$data = array($userId, $itemId, $link_url);
 		$cmd = FCPATH . 'scripts' . DIRECTORY_SEPARATOR . 'link_item.py';
 		$result = shell_exec('python ' . $cmd . ' ' . escapeshellarg(json_encode($data)));
+		return $this->get_real_result($result);
+	}
+	
+	private function get_real_result($result)
+	{
+		$pos = stripos($result, PYTHON_PLACEHOLD);
+		if ($pos) {
+			$result = substr($result, $pos + strlen(PYTHON_PLACEHOLD));
+			$result = json_decode($result, true);
+		}
 		return $result;
 	}
 }

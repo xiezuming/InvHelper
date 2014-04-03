@@ -5,13 +5,14 @@ The input and output foramtion is JSON.
 If can't find itmes, nothing will be printed to consle.
 
 Input Parameters: title
-Output: Itme list.
+Output: Item list.
 
 """
 
 import sys, json
 
 try:
+    print sys.argv[1];
     data = json.loads(sys.argv[1])
 except:
     sys.exit(1)
@@ -33,5 +34,6 @@ result = {
 				'image'		:	'http://i.ebayimg.com/00/s/ODAwWDgwMA==/z/afYAAOxy-WxTCwL6/$_3.JPG'
 			},
 };
-
+print 'test'
+print '***|||RESULT|||***'
 print json.dumps(result)
