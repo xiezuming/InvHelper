@@ -32,36 +32,34 @@
 		</td>
 	</tr>
 </table>
+
+<?php echo form_dropdown('category', $categories, NULL, 'onchange="query_items(this.options[this.options.selectedIndex].value)"');?>
+
+<div id='items'></div>
 <hr/>
 <?php echo form_open('/inv2/link/'.$inv['userId'].'/'.$inv['itemId'], 'id="myform"') ?>
-	<input id="link_url" name='link_url' type="hidden"/>
+	<input id="linkUrl" name='linkUrl' type="hidden"/>
 <?php echo '</form>' ?>
-
-<table>
-	<tr>
-		<th></th>
-		<th>Title</th>
-		<th>Price</th>
-		<th>Image</th>
-	</tr>
-	<?php
-	if ($match_items && is_array($match_items)) {
-		foreach ($match_items as $item): ?>
-	<tr>
-		<td><input type="button" value="Link" onclick='link("<?php echo $item['url']?>")'></td>
-		<td><?php echo anchor($item['url'], $item['title'], 'target="_blank"')?></td>
-		<td><?php echo $item['price']?></td>
-		<td><img src="<?php echo $item['image']?>" height="200"></td>
-	</tr>
-	<?php 
-		endforeach;
-	} ?>
-</table>
 
 <script type="text/javascript">
 function link(url)
 {
-	document.getElementById("link_url").value = url;
+	document.getElementById("linkUrl").value = url;
 	document.forms["myform"].submit();
+}
+function query_items(catNum)
+{
+	if (catNum == '') {
+		$("#items").html('');
+		return;
+	}
+	
+	$.ajax({
+		url: "<?php echo site_url('/inv2/query_items/'.$inv['userId'].'/'.$inv['itemId'])?>/" + catNum,
+		cache: false,
+		success: function(html){
+			$("#items").html(html);
+		}
+	});
 }
 </script>

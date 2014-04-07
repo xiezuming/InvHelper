@@ -46,7 +46,12 @@ class Inv2 extends CI_Controller {
 		}
 		$data['title'] = 'Inv Details';
 		
-		$data['match_items'] = $this->call_query_items_script($data['inv']['title']);
+		$categories_ori = $this->call_query_categories_scritp($data['inv']['title']);
+		$categories = array('' => 'Please select one category...');
+		foreach ($categories_ori as $category) {
+			$categories[$category['catNum']] = $category['catNameLong'];
+		}
+		$data['categories'] = $categories;
 		
 		$this->load->helper('form');
 		
@@ -55,11 +60,23 @@ class Inv2 extends CI_Controller {
 		$this->load->view('templates/footer');
 	}
 	
+	public function query_items($userId, $itemId, $catNum)
+	{
+		$data['inv'] = $this->inv_item_model->get_inv_item($userId, $itemId);
+		if (empty($data['inv']))
+		{
+			show_404();
+		}
+		
+		$data['match_items'] = $this->call_query_items_script($data['inv']['title'], $catNum);
+		$this->load->view('inv2/match_items', $data);
+	}
+	
 	public function link($userId, $itemId)
 	{
-		$link_url = $this->input->post ( 'link_url' );
+		$linkUrl = $this->input->post ( 'linkUrl' );
 		// Call python script. Link the inventory item with eBay item url
-		$result = $this->call_link_script($userId, $itemId, $link_url);
+		$result = $this->call_link_script($userId, $itemId, $linkUrl);
 		
 		if (isset($result) && isset($result['message'])) {
 			$this->session->set_flashdata('falshmsg',
@@ -124,17 +141,25 @@ class Inv2 extends CI_Controller {
 		exit; //and exit
 	}
 	
-	private function call_query_items_script($title)
+	private function call_query_categories_scritp($title)
 	{
 		$data = array($title);
+		$cmd = FCPATH . 'scripts' . DIRECTORY_SEPARATOR . 'query_categories.py';
+		$result = shell_exec('python ' . $cmd . ' ' . escapeshellarg(json_encode($data)));
+		return $this->get_real_result($result);
+	}
+
+	private function call_query_items_script($title, $catNum)
+	{
+		$data = array($title, $catNum);
 		$cmd = FCPATH . 'scripts' . DIRECTORY_SEPARATOR . 'query_matched_items.py';
 		$result = shell_exec('python ' . $cmd . ' ' . escapeshellarg(json_encode($data)));
 		return $this->get_real_result($result);
 	}
 	
-	private function call_link_script($userId, $itemId, $link_url)
+	private function call_link_script($userId, $itemId, $linkUrl)
 	{
-		$data = array($userId, $itemId, $link_url);
+		$data = array($userId, $itemId, $linkUrl);
 		$cmd = FCPATH . 'scripts' . DIRECTORY_SEPARATOR . 'link_item.py';
 		$result = shell_exec('python ' . $cmd . ' ' . escapeshellarg(json_encode($data)));
 		return $this->get_real_result($result);
