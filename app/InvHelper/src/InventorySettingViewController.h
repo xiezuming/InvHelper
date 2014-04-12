@@ -13,5 +13,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *userNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UITextField *serverTextField;
+@property (weak, nonatomic) IBOutlet UITextField *timeoutTextField;
+@property (weak, nonatomic) IBOutlet UITextField *photoMaxPixelTextField;
+@property (weak, nonatomic) IBOutlet UITextField *photoQualityTextField;
 
 @end

@@ -6,13 +6,12 @@
 //  Copyright (c) 2013年 Self. All rights reserved.
 //
 
+#import "Constants.h"
 #import "InventoryDetailViewController.h"
 #import "InventoryEditViewController.h"
 #import "InventoryItem.h"
 #import "PhotoViewController.h"
 #import "PhotoDao.h"
-
-static const CGSize PHOTO_THUMBNAIL_SIZE = {60, 60};
 
 @interface InventoryDetailViewController ()
 - (void)configureView;

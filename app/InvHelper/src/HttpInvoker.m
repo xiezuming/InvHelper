@@ -7,6 +7,7 @@
 //
 
 #import "HttpInvoker.h"
+#import "Constants.h"
 
 @implementation HttpInvokerResult
 
@@ -47,9 +48,10 @@
     }
     
     NSURL *url = [NSURL URLWithString:[baseUrlString stringByAppendingString:methodName]];
+    NSTimeInterval timeout = [HttpInvoker getTimeout];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                       timeoutInterval:5.0];
+                                                       timeoutInterval:timeout];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[HttpInvoker convertToHttpBodyWithParams:params]];
     
@@ -85,6 +87,20 @@
     }
     
     return [NSString stringWithFormat:@"http://%@/inv/index.php/inv/", server];
+}
+
++(NSTimeInterval) getTimeout {
+    NSNumber *timeout = NULL;
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [ud objectForKey:KEY_SETTINGS];
+    if (settings) {
+        timeout = [settings objectForKey:KEY_TIMEOUT];
+    }
+    if (!settings) {
+        timeout = [NSNumber numberWithUnsignedInt:TIMEOUT_DEFAULT];
+    }
+    return timeout.doubleValue;
 }
 
 +(NSData *) convertToHttpBodyWithParams:(NSDictionary *) params {
@@ -151,7 +167,7 @@
     [request setHTTPBody:body];
     
     // set the content-length
-    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    NSString *postLength = [NSString stringWithFormat:@"%ld", (unsigned long)[body length]];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     
     NSError *error;

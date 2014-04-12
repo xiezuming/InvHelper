@@ -52,7 +52,7 @@ static InventoryItemDao *instance = nil;
 
 - (InventoryItem *)createInventoryItem {
     InventoryItem *item = [NSEntityDescription insertNewObjectForEntityForName:@"Item" inManagedObjectContext:managedObjectContext];
-    item.itemId = [NSNumber numberWithInt:_nextId++];
+    item.itemId = [NSNumber numberWithUnsignedLong:_nextId++];
     [self.itemArray addObject:item];
     return item;
 }

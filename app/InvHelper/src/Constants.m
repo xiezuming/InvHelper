@@ -8,6 +8,14 @@
 
 #import "Constants.h"
 
-@implementation Constants
+const CGSize PHOTO_THUMBNAIL_SIZE = {60, 60};
+const CGSize PHOTO_THUMBNAIL_SIZE_LIST = {44, 44};
+const CGFloat PHOTO_MAX_SIDE_PIEXEL_DEFAULT = 1024;
+const CGFloat PHOTO_QUALITY_DEFAULT = 0.9;
+const unsigned int TIMEOUT_DEFAULT = 5;
 
-@end
+NSString *KEY_SETTINGS = @"settings";
+const NSString *KEY_TIMEOUT = @"timeout";
+const NSString *KEY_PHOTO_MAX_PIEXEL = @"photoMaxPiexel";
+const NSString *KEY_PHOTO_QUALITY = @"photoQuality";
+

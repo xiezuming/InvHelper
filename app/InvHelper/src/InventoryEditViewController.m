@@ -6,6 +6,7 @@
 //  Copyright (c) 2013年 Self. All rights reserved.
 //
 
+#import "Constants.h"
 #import "InventoryEditViewController.h"
 #import "InventoryItem.h"
 #import "InventoryItemDao.h"
@@ -13,7 +14,6 @@
 #import "HttpInvoker.h"
 #import <QuartzCore/QuartzCore.h>
 
-static const CGSize PHOTO_THUMBNAIL_SIZE = {60, 60};
 static NSString *STATUS_DEFAULT = @"Available";
 
 @interface InventoryEditViewController ()
@@ -208,7 +208,7 @@ const int TAG_MARKET = 2012;
 {
     textField.tag = tag;
     textField.inputAccessoryView = self.pickerToolbar;
-    [_tagToTextFieldDict setObject:textField forKey:[NSNumber numberWithInt:tag]];
+    [_tagToTextFieldDict setObject:textField forKey:[NSNumber numberWithInteger:tag]];
     
     if (isPicker) {
         UIPickerView *pickerView = [[UIPickerView alloc] init];
@@ -216,7 +216,7 @@ const int TAG_MARKET = 2012;
         pickerView.delegate = self;
         pickerView.tag = tag;
         [pickerView setShowsSelectionIndicator:true];
-        [_tagToPickerViewDict setObject:pickerView forKey:[NSNumber numberWithInt:tag]];
+        [_tagToPickerViewDict setObject:pickerView forKey:[NSNumber numberWithInteger:tag]];
         
         textField.inputView = pickerView;
     }
@@ -306,7 +306,7 @@ const int TAG_MARKET = 2012;
             for (int i=0; i<pickerData.count; i++) {
                 if ([[pickerData objectAtIndex:i] isEqualToString:textField.text]) {
                     UIPickerView *pickerView = [_tagToPickerViewDict
-                                                objectForKey:[NSNumber numberWithInt:textField.tag]];
+                                                objectForKey:[NSNumber numberWithInteger:textField.tag]];
                     [pickerView selectRow:i inComponent:0 animated:FALSE];
                     break;
                 }
@@ -328,9 +328,9 @@ const int TAG_MARKET = 2012;
 
 // **************** Drill Down Picker Begin ****************/
 
--(NSArray*)getPickerDataForViewTag:(int)tag
+-(NSArray*)getPickerDataForViewTag:(NSInteger)tag
 {
-    return [_tagToPickerDataDict objectForKey:[NSNumber numberWithInt:tag]];
+    return [_tagToPickerDataDict objectForKey:[NSNumber numberWithInteger:tag]];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -353,7 +353,7 @@ const int TAG_MARKET = 2012;
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row
       inComponent:(NSInteger)component
 {
-    UITextField *textField = [self.tagToTextFieldDict objectForKey:[NSNumber numberWithInt:pickerView.tag]];
+    UITextField *textField = [self.tagToTextFieldDict objectForKey:[NSNumber numberWithInteger:pickerView.tag]];
     textField.text = [[self getPickerDataForViewTag:pickerView.tag] objectAtIndex:row];
 }
 
@@ -371,7 +371,8 @@ const int TAG_MARKET = 2012;
         [self queryRecommendationInfo:TRUE];
         //resultImage.image = [info objectForKey: UIImagePickerControllerOriginalImage];
     } else {
-        UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
+        //UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
+        UIImage *chosenImage = info[UIImagePickerControllerOriginalImage];
         NSString *photoName = [_photoDao addPhotoWithImage:chosenImage];
         [_photoNames addObject:photoName];
         [self refreshPhotos];
@@ -392,7 +393,7 @@ const int TAG_MARKET = 2012;
 
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
-    picker.allowsEditing = YES;
+    picker.allowsEditing = NO;
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;

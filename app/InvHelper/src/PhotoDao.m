@@ -6,6 +6,7 @@
 //  Copyright (c) 2013年 Self. All rights reserved.
 //
 
+#import "Constants.h"
 #import "PhotoDao.h"
 
 static PhotoDao *instance = nil;
@@ -78,13 +79,47 @@ static PhotoDao *instance = nil;
 }
                                 
 -(NSString *) addPhotoWithImage:(UIImage *)image {
+    UIImage *scaledImage = [self scaleImageFitSettings:image];
+    CGFloat compressionQuality = [self getPhotoQuality];
     NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
     NSString *photoName = [NSString stringWithFormat:@"%d.jpg", (int)timeStamp];
     NSString *filePath = [self getPhotoPath:photoName];
-    [UIImageJPEGRepresentation(image, 0.5) writeToFile:filePath atomically:YES];
+    
+    [UIImageJPEGRepresentation(scaledImage, compressionQuality) writeToFile:filePath atomically:YES];
     [_addedPhotoPaths addObject:filePath];
     NSLog(@"Add photo:  %@", filePath);
+    
     return photoName;
+}
+
+-(UIImage *) scaleImageFitSettings:(UIImage *) orignalImage {
+    CGFloat photoMaxSidePiexel = PHOTO_MAX_SIDE_PIEXEL_DEFAULT;
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [ud objectForKey:KEY_SETTINGS];
+    if (settings) {
+        NSNumber *photoMaxSidePiexelSetting = [settings objectForKey:KEY_PHOTO_MAX_PIEXEL];
+        if (photoMaxSidePiexelSetting)
+            photoMaxSidePiexel = photoMaxSidePiexelSetting.floatValue;
+    }
+    CGFloat scaleW = photoMaxSidePiexel / orignalImage.size.width;
+    CGFloat scaleH = photoMaxSidePiexel / orignalImage.size.height;
+    CGFloat scaleSize = MIN(scaleW, scaleH);
+    if (scaleSize < 1)
+        return [self scaleImage:orignalImage toScale:scaleSize];
+    else
+        return orignalImage;
+}
+
+-(CGFloat) getPhotoQuality {
+    CGFloat photoQuality = PHOTO_QUALITY_DEFAULT;
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [ud objectForKey:KEY_SETTINGS];
+    if (settings) {
+        NSNumber *photoQualitySetting = [settings objectForKey:KEY_PHOTO_QUALITY];
+        if (photoQualitySetting)
+            photoQuality = photoQualitySetting.floatValue;
+    }
+    return photoQuality;
 }
 
 -(void)deletePhotoWithPhotoName:(NSString *)photoName {

@@ -6,8 +6,8 @@
 //  Copyright (c) 2013年 Self. All rights reserved.
 //
 
+#import "Constants.h"
 #import "InventoryMasterViewController.h"
-
 #import "InventoryEditViewController.h"
 #import "InventoryDetailViewController.h"
 #import "InventoryItem.h"
@@ -17,7 +17,6 @@
 #import "PhotoDao.h"
 
 static const int SEARCH_SCOPE_ALL = 0;
-static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
 
 @interface InventoryMasterViewController()
 
@@ -89,7 +88,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     [[cell textLabel] setText: title];
     [[cell detailTextLabel] setText:item.desc];
     [[cell imageView] setImage:[[PhotoDao instance] getScaleImageByPhotoName:item.photoname1
-                                                                 toScaleSize:PHOTO_THUMBNAIL_SIZE]];
+                                                                 toScaleSize:PHOTO_THUMBNAIL_SIZE_LIST]];
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     return cell;
 }
@@ -268,7 +267,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     
     HttpInvokerResult *result = nil;
     
-    NSUInteger itemCount = [[InventoryItemDao instance] countOfList];
+    unsigned long itemCount = [[InventoryItemDao instance] countOfList];
     for (NSUInteger i = 0; i < itemCount; i++) {
         HttpInvokerResult *r = [self uploadItemAtIndex:i];
         if (!r.isOK) {
@@ -278,13 +277,13 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     }
     
     if (!result) {
-        result = [HttpInvokerResult createSuccessfulResultWithMessage:[NSString stringWithFormat:@"Upload all items successfully.\nItems: %d", itemCount]];
+        result = [HttpInvokerResult createSuccessfulResultWithMessage:[NSString stringWithFormat:@"Upload all items successfully.\nItems: %ld", itemCount]];
     }
     
     [self performSelectorOnMainThread:@selector(afterUpload:) withObject:result waitUntilDone:TRUE];
 }
 
--(HttpInvokerResult *)uploadItemAtIndex:(NSUInteger)index{
+-(HttpInvokerResult *)uploadItemAtIndex:(unsigned long)index{
     HttpInvokerResult *result;
     InventoryItem *item = [[InventoryItemDao instance] objectInListAtIndex:index];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:[InventoryItemHelper convertItemToDict:item KeepType:true]];
@@ -292,7 +291,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
     result = [HttpInvoker call:@"add_item" WithParams:params];
     if (!result.isOK) {
         return [HttpInvokerResult createFialedResultWithMessage:
-                [NSString stringWithFormat:@"Failed to upload item[%d]: %@", index+1, [result message]]];
+                [NSString stringWithFormat:@"Failed to upload item[%ld]: %@", index+1, [result message]]];
     }
     
     NSMutableArray *photoPaths = [[NSMutableArray alloc] init];
@@ -308,7 +307,7 @@ static const CGSize PHOTO_THUMBNAIL_SIZE = {44, 44};
         result = [HttpInvoker uploadFile:photoPath WithParams:params];
         if (!result.isOK) {
             return [HttpInvokerResult createFialedResultWithMessage:
-                    [NSString stringWithFormat:@"Failed to upload the photo file of item[%d]: %@", index, [result message]]];
+                    [NSString stringWithFormat:@"Failed to upload the photo file of item[%ld]: %@", index, [result message]]];
         }
     }
     
