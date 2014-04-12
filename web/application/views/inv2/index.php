@@ -15,7 +15,7 @@ echo $info
 </pre>
 <?php echo form_open('/inv2/') ?>
 	<textarea name="where" rows="3" cols="50"><?php echo isset($where)?trim($where):''?></textarea><br/>
-	<input type="submit" value="Query"/>
+	<input type="submit" name="submit" value="Query"/>
 <?php echo '</form>' ?>
 <br/>
 

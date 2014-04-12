@@ -23,9 +23,15 @@ class Inv2 extends CI_Controller {
 	public function index()
 	{
 		$this->load->helper('form');
+		$this->load->library('session');
 		
+		if ($this->input->post('submit')) {
+			$where = $this->input->post ( 'where' );
+			$this->session->set_userdata('QUERY_WHERE', $where);
+		} else {
+			$where = $this->session->userdata('QUERY_WHERE');
+		}
 		
-		$where = $this->input->post ( 'where' );
 		//"inv_item.itemId <> 3";
 		$data['invs'] = $this->inv_item_model->get_available_inv_list($where);
 		$data['count'] = $this->inv_item_model->count_available_inv_list($where);
@@ -84,7 +90,7 @@ class Inv2 extends CI_Controller {
 			redirect(site_url("/inv2/details/".$userId.'/'.$itemId), 'refresh');
 		} else {
 			$this->session->set_flashdata('falshmsg',
-					array('type'=>'message', 'content'=>'Item['.$userId.'-'.$itemId.'] is linked. <br/>'.$link_url));
+					array('type'=>'message', 'content'=>'Item['.$userId.'-'.$itemId.'] is linked. <br/>'.$linkUrl));
 			redirect(site_url("/inv2/"), 'refresh');
 		}
 	}
