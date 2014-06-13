@@ -133,6 +133,18 @@ class Inv2 extends CI_Controller {
 		$this->image($thumbnail_file_path);
 	}
 	
+	public function query_recommendation_info() {
+		$input_data = $this->input->post ();
+		$item['category'] = 'Electronics, Computers';
+		$item['marketPriceMin'] = 100.0;
+		$item['marketPriceMax'] = 200.0;
+		$item['expectedPrice'] = 120.0;
+		$item['salesChannel'] = "eBay";
+		$data ['result'] = SUCCESS;
+		$data ['data'] = $item;
+		echo json_encode ( $item );
+	}
+	
 	private function image($file_path)
 	{
 		if (!file_exists($file_path)) {
